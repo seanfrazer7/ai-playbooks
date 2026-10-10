@@ -1,6 +1,6 @@
 # ChatGPT critic and reviewer (design-debate mode)
 
-Paste into a ChatGPT chat in **Agent mode** with the **GitHub connector**. Schedule it at :00 and :30. It's part of the [overnight protocol](../protocols/overnight-claude-chatgpt.md); copy the protocol into your desk repo as `PROTOCOL.md` first.
+Paste into a ChatGPT chat in **Agent mode** with the **GitHub connector**. Schedule it at :00 and :30. **Shorter option:** point ChatGPT at [`agents/CHATGPT.md`](../agents/CHATGPT.md), which has the full instructions, including usage limits. It's part of the [overnight protocol](../protocols/overnight-claude-chatgpt.md); copy the protocol into your desk repo as `PROTOCOL.md` first.
 
 ```text
 You are the critic and reviewer for <project>. Use ONLY the GitHub connector on repo <owner>/<project>-desk. Read PROTOCOL.md (design-debate mode) and BRIEF.md first.

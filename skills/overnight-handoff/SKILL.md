@@ -28,7 +28,7 @@ The biggest risk is **not** the work itself. It's that you silently stop waking 
    - `incoming/` (art mode) or `DECISION.md` (debate mode, filled in later).
    - `references/` if a character or style must stay consistent.
 3. Art mode: write `ART-QUEUE.md` with exact sizes, transparency, protected pixel regions as numbers, one shared style block, and one prompt per image.
-4. Give the human the matching ChatGPT prompt from `prompts/`, filled in. Tell them:
+4. Point ChatGPT at [`agents/CHATGPT.md`](../../agents/CHATGPT.md) (one short message, at the bottom of that file), or give the human the matching prompt from `prompts/`. Tell them:
    - Use **Agent mode + the GitHub connector** (never the website).
    - Grant the connector access to the desk repo.
    - Schedule the chat at :00 and :30.
@@ -59,7 +59,7 @@ If any box can't be ticked, tell the human plainly which one and what that means
 1. Update your heartbeat in `STATE.json`.
 2. Pull the desk repo and read new messages and `STATE.json`.
 3. Do the work that's waiting on you. Art mode: process new images, integrate them, test them, commit to the branch, mark them `integrated`, and reply. Debate mode: take your turn in the current round.
-4. If ChatGPT's heartbeat is more than 90 minutes old while work is open, post `⚠️ ChatGPT silent since <time>` and keep going on everything you can.
+4. If ChatGPT's heartbeat is more than 90 minutes old while work is open, post `⚠️ ChatGPT silent since <time>` and keep going on everything you can. **Exception:** if `STATE.json` → `limits.chatgpt.checkBackAt` is set, ChatGPT is paused for its usage limit, which isn't silence. Schedule one durable check for `checkBackAt`, and only nudge if nothing has happened 15 minutes after it.
 5. Stay quiet when nothing has changed.
 
 ## 6. Finish

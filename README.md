@@ -21,12 +21,13 @@ I'm Sean Frazer. I build products by directing AI agents. I set the goals and th
 | [`case-studies/`](case-studies/) | Real projects: the problem, the setup, a timeline, the results, what broke, what changed |
 | [`protocols/`](protocols/) | Reusable playbooks. Start with the [overnight Claude ⇄ ChatGPT protocol](protocols/overnight-claude-chatgpt.md) |
 | [`prompts/`](prompts/) | Copy-paste prompts for each agent's role |
+| [`agents/`](agents/) | Start-here instruction files for each agent. Point ChatGPT at [`agents/CHATGPT.md`](agents/CHATGPT.md) |
 | [`skills/`](skills/) | Claude Code skills you can install, e.g. [`overnight-handoff`](skills/overnight-handoff/SKILL.md) |
 
 ## Use the overnight protocol
 
 1. Create a private `<project>-desk` repo and copy [the protocol](protocols/overnight-claude-chatgpt.md) into it as `PROTOCOL.md`.
-2. Paste the [Claude kickoff prompt](prompts/claude-overnight-kickoff.md) into Claude Code in your app repo, and the [art agent](prompts/chatgpt-art-agent.md) or [critic](prompts/chatgpt-critic.md) prompt into ChatGPT (Agent mode + GitHub connector).
+2. Paste the [Claude kickoff prompt](prompts/claude-overnight-kickoff.md) into Claude Code in your app repo. Point ChatGPT (Agent mode + GitHub connector) at [`agents/CHATGPT.md`](agents/CHATGPT.md); the one-line message to send is at the bottom of that file.
 3. **Don't go to bed until the bedtime checklist passes.** In particular, the builder's wake-up has to fire once while you watch. That's the lesson from the first run.
 
 To install the skill, copy `skills/overnight-handoff/` into your project's `.claude/skills/` folder (or `~/.claude/skills/` to use it everywhere).

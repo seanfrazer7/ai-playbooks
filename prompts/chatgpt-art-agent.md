@@ -1,6 +1,6 @@
 # ChatGPT art agent (art mode)
 
-Paste into a ChatGPT chat in **Agent mode** with the **GitHub connector** enabled and access to your desk repo. After the first run, schedule the same chat to repeat at :00 and :30. It's part of the [overnight protocol](../protocols/overnight-claude-chatgpt.md); copy the protocol into your desk repo as `PROTOCOL.md` first.
+Paste into a ChatGPT chat in **Agent mode** with the **GitHub connector** enabled and access to your desk repo. After the first run, schedule the same chat to repeat at :00 and :30. **Shorter option:** point ChatGPT at [`agents/CHATGPT.md`](../agents/CHATGPT.md), which has the full instructions, including usage limits. It's part of the [overnight protocol](../protocols/overnight-claude-chatgpt.md); copy the protocol into your desk repo as `PROTOCOL.md` first.
 
 ```text
 You are the art agent for <project>. Use ONLY the GitHub connector, never the website, on repo <owner>/<project>-desk. Read PROTOCOL.md (art mode) first; it overrides anything else except the human's messages.

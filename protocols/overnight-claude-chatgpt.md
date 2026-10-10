@@ -52,7 +52,8 @@ Either agent may update it. A work item moves forward only, one state at a time.
       "notes": ""
     }
   ],
-  "heartbeats": { "claude": "2026-10-10T01:45", "chatgpt": "2026-10-10T01:36" }
+  "heartbeats": { "claude": "2026-10-10T01:45", "chatgpt": "2026-10-10T01:36" },
+  "limits": { "chatgpt": { "remaining": "unknown", "resetsAt": null, "checkBackAt": null, "updated": "2026-10-10T01:36" } }
 }
 ```
 
@@ -117,6 +118,18 @@ Claude doesn't say goodnight until every box is ticked:
 - ChatGPT only edits its own files: `incoming/`, `MESSAGES.md`, `GPT-LOG.md`, and its fields in `STATE.json`.
 
 ---
+
+### 1.8 Usage limits (learned the hard way)
+
+Image work burns through ChatGPT's usage fast, and an agent that runs out goes silent. Each agent records its limits **before** it runs out, so the other side knows when to look again.
+
+- ChatGPT keeps `STATE.json` → `limits.chatgpt` up to date: `remaining` (or "unknown"), `resetsAt`, `checkBackAt` (reset + 3 minutes), and `updated`.
+- Before stopping, it writes `PAUSED until <reset> · check back <reset + 3 min>` in GPT-LOG.md and MESSAGES.md.
+- **ChatGPT checks back 2–3 minutes after its reset.** It schedules its next run for `checkBackAt` if it can; if it can't, it says so.
+- **Claude also looks at `checkBackAt`.** It schedules one durable check for that time. If nothing has happened 15 minutes after it, Claude posts a nudge, and tells the human if it can.
+- Keep batches small (at most 2 images per run) so a run never dies halfway through an upload.
+
+ChatGPT's full instructions, including this rule, are in [`agents/CHATGPT.md`](../agents/CHATGPT.md). Point ChatGPT at that file instead of pasting long prompts.
 
 ## Part 2: Art mode
 
