@@ -26,6 +26,13 @@ Read [`START-HERE.md`](../START-HERE.md) first. This file only covers what's spe
 5. Run the watchdog once (`gh workflow run watchdog.yml`), and show the human the result.
 6. Confirm the work branch doesn't deploy (e.g. the host only builds `main`).
 
+## Auto mode and permission prompts
+
+Claude Code's auto mode blocks actions that look risky and that the human didn't ask for. In the first test run it blocked `gh secret list` on `ai-desks` as "credential exploration", then stopped for input after 3 blocks. To avoid that:
+- Never list or check secrets. Run the workflow and read its log instead.
+- The start message should name the repos ("My repos for this: …"). If it doesn't, ask the human once to confirm them in a typed message.
+- If something is blocked, don't retry it with different commands. Tell the human what was blocked and what one sentence from them would allow it.
+
 ## Usage tips
 
 - When `/usage` shows under about 15% of the session window left, write the pause note.

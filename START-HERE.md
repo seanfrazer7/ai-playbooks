@@ -15,7 +15,10 @@ Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and fol
 Goal: <one or two sentences: what "done" looks like>
 Partner: <ChatGPT | Gemini | Grok | another Claude thread | <name>'s Claude>
 Deadline: <e.g. 8am tomorrow, or "none">
+My repos for this: <owner>/ai-desks (the desk) and <owner>/<app-repo>. You may push to them as START-HERE allows.
 ```
+
+The last line matters if your agent has a safety check (like Claude Code's auto mode): it tells that check these repos are yours and the pushes are expected.
 
 It replies with **one message**: its plan, the defaults it will use, and any questions, each with a suggested answer. **Reply `go`** to accept all of it, or correct just the parts you want. Then it sets up the desk and **gives you the exact message to send to the partner**.
 
@@ -45,7 +48,7 @@ You were pointed here by a human who wants you to work with another AI agent. Th
 You are the **lead**. You set up the desk, break ties, and write the final report.
 
 **Standing defaults.** The human's start message authorizes these, so don't ask about them one by one. List them once in your plan, and treat `go` as a yes to all of them:
-- **Desk:** if `<owner>/ai-desks` exists (check with `gh repo view`), use it, with its secrets and workflows as they are. Create it only if it's missing.
+- **Desk:** if `<owner>/ai-desks` exists (check with `gh repo view`), use it, with its workflows as they are. Create it only if it's missing. **Never list, read or check secrets.** The first `Claude wake` run proves they work; if it fails, the run log says which secret is missing.
 - **Pushing without asking each time:** to a new work branch in the app repo (named after the project, never `main`), and to your own desk folder `desks/<project>/` in `ai-desks`. Nothing else.
 - **Never:** push to or merge into `main`, deploy, publish, spend money, change real data, or create repos other than `ai-desks`. Those wait for the human ([protocol §7](protocols/two-agent-desk.md#7-limits-and-trust)).
 - **Wake-up:** the `Claude wake` workflow in `ai-desks` if you're Claude Code (see your platform file).

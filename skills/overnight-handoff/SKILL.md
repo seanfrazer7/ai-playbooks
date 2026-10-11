@@ -13,6 +13,8 @@ The biggest risk isn't the work. It's an agent that silently stops waking up, or
 
 The human may type only `/overnight-handoff <goal, partner, deadline>`. That's the whole start message: don't ask them to paste anything else.
 
+Never list, read or check secrets; the first `Claude wake` run proves them. If a safety check blocks an action, don't retry it with different commands. Tell the human what was blocked and what to type to allow it.
+
 Use the **standing defaults** in `START-HERE.md` section A without asking about each one: reuse `<owner>/ai-desks` if it exists; push without asking only to a new work branch in the app repo and to `desks/<project>/`; never `main`, merge, deploy, money or real data; wake with `Claude wake`; playbook build + review unless the goal says otherwise.
 
 Send **one** message: your plan, those defaults, and at most 5 questions, each with a suggested answer. If the human replies `go`, that accepts everything; start setting up. You must end up with:
