@@ -104,6 +104,8 @@ jobs:
           # Use this workflow's own token for the desk, so no extra GitHub app or id-token permission is needed,
           # and Claude's commits come from github-actions[bot] (which the push guard above relies on).
           github_token: ${{ github.token }}
+          # Pushes, the schedule and the watchdog re-start this workflow as the Actions bot. Allow only that bot.
+          allowed_bots: "github-actions"
           # The action only allows basic GitHub tools by default. Claude needs git to commit.
           # npm is allowed so Claude can install, build and test the app in app/ (e.g. npm --prefix app run build).
           # Add other build tools your apps use here.
