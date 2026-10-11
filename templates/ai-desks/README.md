@@ -17,7 +17,7 @@ ai-desks/
 
 ## One-time setup
 
-You do this **once**. After that, starting a project needs no secrets, tokens or access changes. The lead agent does steps 1 and 6; you do the rest.
+You do this **once**. After that, starting a project needs no secrets, tokens or access changes. The lead agent does steps 1 and 7; you do the rest.
 
 1. **Create the repo** (the lead does this): a **private** repo `<owner>/ai-desks` with the contents of this template.
 2. **Connect your Claude plan.** In a terminal, run these two commands. The first prints a long-lived token tied to your Claude subscription. The second asks you to paste it, and stores it as an encrypted secret that only the workflows can read.
@@ -34,7 +34,8 @@ You do this **once**. After that, starting a project needs no secrets, tokens or
 3. **Let Claude push to your app repos (optional).** If the agents will change code in another repo, create a [fine-grained token](https://github.com/settings/personal-access-tokens/new). Give it access to only those repos, with **Contents: read and write**. Then run `gh secret set APP_REPO_TOKEN -R <owner>/ai-desks` and paste it.
 4. **Give your partner AI access once.** For example, allow the ChatGPT GitHub connector to use `ai-desks`.
 5. **Phone alerts (optional).** Install the [ntfy](https://ntfy.sh) app, subscribe to a long random topic name, and save that name with `gh secret set NTFY_TOPIC -R <owner>/ai-desks`. Without this, alerts arrive as GitHub issue emails.
-6. **Test it with the first project** (the lead does this): the proof-of-life check runs `Claude wake` and `Desk watchdog` once each.
+6. **Watch the repo for issues.** On `ai-desks`, click **Watch → Custom → Issues → Apply**. The watchdog's alerts are issues, and GitHub only emails you about issues in repos you watch. Repos made from the command line aren't always watched to begin with. (Failed workflow runs email you anyway.)
+7. **Test it with the first project** (the lead does this): the proof-of-life check runs `Claude wake` and `Desk watchdog` once each.
 
 **When the token expires** (`setup-token` tokens last a long time, but not forever), Claude's runs stop. The watchdog then emails you that Claude is silent. Repeat step 2 and you're back.
 
