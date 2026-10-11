@@ -26,6 +26,8 @@
   },
   "config": {
     "silentAfterMin": 90,
+    "checkInMin": 60,
+    "workWaitingMin": 25,
     "itemStallMin": 180,
     "unfinishedRunMin": 60,
     "maxAttempts": 3,

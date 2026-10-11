@@ -1,5 +1,8 @@
-# Wakes Claude Code for every active desk in this repo: on a schedule, when a desk changes,
-# and when the watchdog asks. Runs on GitHub's servers, so your computer can be off.
+# Wakes Claude Code for every active desk in this repo, on GitHub's servers (your computer can be off):
+#   - when a desk changes (messages, state, work): Claude runs
+#   - on every partner heartbeat: Claude runs only if it's due (work waiting, back from a pause, or
+#     quiet for checkInMin), and the watchdog runs. The partner's schedule is the main clock.
+#   - on GitHub's own schedule (a backup clock: best effort, can be late) and when the watchdog asks
 #
 # One-time setup (see agents/CLAUDE-CODE.md in ai-playbooks):
 #   claude setup-token                                  # uses your Claude plan's usage, same as your chats
@@ -64,6 +67,9 @@ jobs:
             # Heartbeat-only commits (status files) don't wake Claude; messages, state and work do.
             git log --since="3 minutes ago" --name-only --format= origin/main > changed.txt
             args="$args --changed changed.txt"
+          elif [ "$EVENT" = "schedule" ]; then
+            : > changed.txt   # nothing "new" on a timer: wake only desks where Claude is due
+            args="$args --changed changed.txt"
           fi
           desks=$(python3 -I tools/desks.py wake $args)
           if [ "$EVENT" = "workflow_dispatch" ]; then
@@ -75,6 +81,9 @@ jobs:
             for d in $(printf '%s' "$desks" | python3 -c "import json,sys; print(' '.join(x['desk'] for x in json.load(sys.stdin)))"); do
               gh workflow run claude-wake.yml -f desk="$d" && echo "Started Claude for $d"
             done
+            # Every partner heartbeat (and the timer) also runs the watchdog, so the safety net
+            # doesn't depend on GitHub's schedule, which can be late or, for new repos, silent for hours.
+            gh workflow run watchdog.yml -f wake=false && echo "Started the watchdog" || true
           fi
 
   run:

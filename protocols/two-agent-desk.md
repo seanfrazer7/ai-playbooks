@@ -167,7 +167,7 @@ If you don't know the reset time, use the **backoff ladder**: first check back i
 ### 5.4 Coming back
 
 - **If your platform can set a one-off run at a specific time,** schedule it for `checkBackAt`.
-- **If it can't,** keep your regular schedule. Runs before `checkBackAt` stop at step 4 (D.4 in START-HERE), which uses as little as possible. If even that wastes scarce usage, say so in your pause note, so your partner knows the human may have to restart you.
+- **If it can't,** keep your regular schedule. Runs before `checkBackAt` stop at step 4 (D.4 in START-HERE), which uses as little as possible, but still write your heartbeat if you can, because it keeps your partner's clock running (§6.1). If even that wastes scarce usage, say so in your pause note, so your partner knows the human may have to restart you.
 - **When you're back:** set `limits.state` to `ok` (or `low`), clear `resetsAt` and `checkBackAt`, post `### <id> → all · RESUMED`, and continue from `status.next`.
 - **If you come back and you're still limited,** your reset time was wrong. Move to the next step on the ladder and post the new time.
 
@@ -188,7 +188,9 @@ Three layers, so no single failure goes unnoticed:
 
 ### 6.1 Each agent wakes itself
 
-Use the most durable wake-up your platform has. The options are in each [platform file](../agents/README.md). **A wake-up only counts once it has fired on its own** (§8). Never switch off a wake-up that's working to save usage; only add backups. (Turning off a working watcher caused v1's 7-hour gap.)
+Use the most durable wake-up your platform has. The options are in each [platform file](../agents/README.md). **A wake-up only counts once it has fired on its own** (§8).
+
+**Your partner's heartbeat is a clock too.** An agent that wakes through a workflow (like `Claude wake`) is checked on every push to the desk, including the partner's heartbeat-only commits. If it's due (work waiting for it, its usage pause is over, or it hasn't checked in for `checkInMin`, default 60 minutes), it runs. If not, nothing happens and no AI usage is spent. Each push also runs the watchdog. In the first test run, GitHub's own timer didn't fire once in 90 minutes, while ChatGPT's schedule never missed. So **write your heartbeat on every scheduled run, even when you have nothing to do**: it's your partner's alarm clock. Never switch off a wake-up that's working to save usage; only add backups. (Turning off a working watcher caused v1's 7-hour gap.)
 
 ### 6.2 Each agent checks its partner, every run
 
@@ -204,7 +206,7 @@ Post each warning **once**. Don't repeat it every run. The watchdog repeats it t
 
 ### 6.3 The watchdog: no AI, no credits
 
-[`tools/watchdog.py`](../templates/ai-desks/tools/watchdog.py) runs in a GitHub Action ([`watchdog.yml`](../templates/ai-desks/.github/workflows/watchdog.yml)) every 30 minutes, once for each desk in `ai-desks`. It reads only the desk files and doesn't call any AI. It checks:
+[`tools/watchdog.py`](../templates/ai-desks/tools/watchdog.py) runs in a GitHub Action ([`watchdog.yml`](../templates/ai-desks/.github/workflows/watchdog.yml)) on every push to `ai-desks` (so at least every partner heartbeat), with GitHub's own schedule as a backup. It checks each desk once. It reads only the desk files and doesn't call any AI. It checks:
 
 - invalid JSON in `STATE.json` or a status file
 - agents that are silent, didn't come back after a reset, or have an unfinished run
@@ -251,7 +253,7 @@ The lead doesn't say "goodnight" until every box is ticked and shown to the huma
 
 - [ ] `BRIEF.md` has the goal, acceptance checks, roles, limits, deadline and budget. The human has answered the setup questions.
 - [ ] `STATE.json` lists the first items, each with a `next` agent.
-- [ ] **The lead's wake-up fired on its own** (not started by hand) and wrote a heartbeat. The lead shows the human the time.
+- [ ] **The lead's wake-up fired on its own** (not started by hand): from the partner's push or heartbeat, or a timer. It wrote a heartbeat. The lead shows the human the time.
 - [ ] **The partner's wake-up fired on its own** and wrote a heartbeat. The partner has posted `JOINED`, and it can write to the desk.
 - [ ] Both agents have recorded their `limits` (even if `unknown`).
 - [ ] **The watchdog ran once** (started by hand from the Actions tab) and either opened no issue or opened one that's expected. The human knows the issue will arrive by email.

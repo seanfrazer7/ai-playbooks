@@ -1,4 +1,5 @@
-# Desk watchdog: checks every desk for stuck or silent agents, every 30 minutes.
+# Desk watchdog: checks every desk for stuck or silent agents. Runs on every partner heartbeat
+# (Claude wake starts it), and on GitHub's schedule as a backup.
 # Uses no AI and no Claude usage, only about 1 minute of GitHub Actions time per run.
 # Opens one "Desk watchdog: <desk>" issue per desk with a problem (GitHub emails you) and closes it when it's fixed.
 # When no desk is active, it switches itself and Claude wake off. The lead switches them on for a new desk.
@@ -9,6 +10,11 @@ on:
   schedule:
     - cron: "7,37 * * * *"
   workflow_dispatch:
+    inputs:
+      wake:
+        description: "Re-start overdue agents' wake workflows (Claude wake already does this when it starts the watchdog)"
+        required: false
+        default: "true"
 
 permissions:
   contents: read
@@ -30,6 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          WAKE: ${{ github.event.inputs.wake || 'true' }}
         run: |
           gh label create watchdog --color D93F0B --description "Desk watchdog alerts" --force >/dev/null
           notify() {
@@ -60,9 +67,11 @@ jobs:
                   notify "Desk $desk's alerts changed. See the issue in your ai-desks repo."
                 fi
               fi
-              while read -r wf; do
-                [ -n "$wf" ] && gh workflow run "$wf" -f desk="$desk" || true
-              done < wake.txt
+              if [ "$WAKE" = "true" ]; then
+                while read -r wf; do
+                  [ -n "$wf" ] && gh workflow run "$wf" -f desk="$desk" || true
+                done < wake.txt
+              fi
             elif [ -n "$num" ]; then
               gh issue comment "$num" --body-file alerts.md
               gh issue close "$num"

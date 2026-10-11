@@ -5,7 +5,7 @@
 ## Abilities
 
 - **Desk:** Agent mode with the **GitHub connector**, with access granted to your `ai-desks` repo. You grant this once; every project is a folder in it. In v1 this read files and committed images and Markdown.
-- **Wake-up:** a **scheduled task** in the same chat. Use `:15` and `:45` when Claude is the lead.
+- **Wake-up:** a **scheduled task** in the same chat. Use `:15` and `:45` when Claude is the lead. **Commit your heartbeat on every scheduled run, even when there's nothing to do.** Each heartbeat is also Claude's alarm clock and the watchdog's: it wakes Claude if Claude is due. In the first test run this was the only clock that worked.
 - **Usage:** image generation and Agent mode use up usage fast. You usually only find out from a limit message, so assume `"state": "unknown"` and keep runs small.
 
 ## Rules learned the hard way
