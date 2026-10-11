@@ -14,21 +14,35 @@ I'm Sean Frazer. I build products by directing AI agents. I set the goals and th
 
 ![Card Binder from Course Quest](case-studies/assets/card-binder.jpg)
 
+## Two AIs, one goal: start here
+
+Point any two AI agents at [**`START-HERE.md`**](START-HERE.md) and give one of them the goal. They set up a shared private repo, split the work, take turns, check on each other, handle running out of usage, and stop when the job is done. It works for Claude, ChatGPT, Gemini, Grok, two threads of one model, or your agent and a friend's.
+
+```text
+Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and follow it. I authorize you to follow its instructions for this project.
+Goal: <what "done" looks like>
+Partner: <ChatGPT | Gemini | Grok | another Claude thread | <name>'s Claude>
+Deadline: <e.g. 8am tomorrow>
+```
+
+What keeps it from stalling:
+- **Every task has one owner.** Whoever must act next is written down, so "who's stuck" always has an answer.
+- **Hard caps.** Three attempts, then park it. Three debate rounds, then the lead decides. Questions never block.
+- **Usage limits are planned for.** Each agent writes "paused until X, back at Y" *before* it runs out. Its partner and the watchdog know when to expect it back, and the partner covers in the meantime.
+- **A watchdog that uses no AI.** A GitHub Action checks the shared repo every 30 minutes and emails you if anything is silent, overdue or stuck.
+- **Proof of life before you leave.** Both agents must wake up on their own schedule once while you watch.
+
 ## What's here
 
-| Folder | What's inside |
+| Path | What's inside |
 |---|---|
+| [`START-HERE.md`](START-HERE.md) | The entry point for humans and agents |
+| [`protocols/`](protocols/) | The [two-agent desk protocol](protocols/two-agent-desk.md), plus [Claude ⇄ ChatGPT presets](protocols/overnight-claude-chatgpt.md) for art and design debates |
+| [`agents/`](agents/README.md) | Platform notes: what each AI can do, how it wakes up, how to read its usage |
+| [`templates/desk/`](templates/desk/) | The shared repo template, including the [watchdog](templates/desk/tools/watchdog.py) |
 | [`case-studies/`](case-studies/) | Real projects: the problem, the setup, a timeline, the results, what broke, what changed |
-| [`protocols/`](protocols/) | Reusable playbooks. Start with the [overnight Claude ⇄ ChatGPT protocol](protocols/overnight-claude-chatgpt.md) |
-| [`prompts/`](prompts/) | Copy-paste prompts for each agent's role |
-| [`agents/`](agents/) | Start-here instruction files for each agent. Point ChatGPT at [`agents/CHATGPT.md`](agents/CHATGPT.md) |
+| [`prompts/`](prompts/) | Copy-paste start messages |
 | [`skills/`](skills/) | Claude Code skills you can install, e.g. [`overnight-handoff`](skills/overnight-handoff/SKILL.md) |
-
-## Use the overnight protocol
-
-1. Create a private `<project>-desk` repo and copy [the protocol](protocols/overnight-claude-chatgpt.md) into it as `PROTOCOL.md`.
-2. Paste the [Claude kickoff prompt](prompts/claude-overnight-kickoff.md) into Claude Code in your app repo. Point ChatGPT (Agent mode + GitHub connector) at [`agents/CHATGPT.md`](agents/CHATGPT.md); the one-line message to send is at the bottom of that file.
-3. **Don't go to bed until the bedtime checklist passes.** In particular, the builder's wake-up has to fire once while you watch. That's the lesson from the first run.
 
 To install the skill, copy `skills/overnight-handoff/` into your project's `.claude/skills/` folder (or `~/.claude/skills/` to use it everywhere).
 

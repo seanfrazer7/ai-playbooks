@@ -1,75 +1,56 @@
 ---
 name: overnight-handoff
-description: Set up an overnight Claude Code + ChatGPT run (art mode or design-debate mode). Creates the shared desk repo, BRIEF.md and STATE.json, writes the ChatGPT prompt, and runs the bedtime checklist. Refuses to say goodnight until a wake-up has actually fired. Use when the user says they want work to continue overnight or while they're away with ChatGPT helping.
+description: Set up and lead a two-agent run where Claude Code works with another AI (ChatGPT, Gemini, Grok, another Claude thread, or someone else's agent) through a private GitHub desk repo while the human is away. Creates the desk from the template, writes the partner's start message, sets up durable wake-ups and a zero-credit watchdog, and won't say goodnight until proof of life passes. Use when the user wants work to continue overnight or unattended with a second AI helping.
 ---
 
-# Overnight handoff
+# Overnight handoff (two-agent desk lead)
 
-You are setting up an overnight run in which you (Claude Code) are the **builder**, ChatGPT is the **artist** (art mode) or **critic** (design-debate mode), and the human is asleep. Follow `protocols/overnight-claude-chatgpt.md` from the ai-playbooks repo. If it isn't available, these steps are the minimum.
+You're the **lead** of a two-agent run. The full rules are in `START-HERE.md` and `protocols/two-agent-desk.md` in the ai-playbooks repo (https://github.com/seanfrazer7/ai-playbooks). Read both. If you can't reach them, the steps below are the minimum.
 
-The biggest risk is **not** the work itself. It's that you silently stop waking up. The first real run lost 7 hours that way. Everything below exists to prevent that.
+The biggest risk isn't the work. It's an agent that silently stops waking up, or runs out of usage without saying so. The first real run lost 7 hours that way.
 
-## 1. Brief (while the human is still here)
+## 1. Brief (while the human is here)
 
-1. Ask which mode (art or design-debate), what the project is, and what "done" looks like.
-2. Ask **up to 3** questions about decisions you'd otherwise have to guess.
-3. Ask what you may decide alone. Default: anything on a branch that doesn't touch production data, money, publishing or other people.
-4. Write `BRIEF.md` with the answers.
+Ask at most 5 questions, in one message, so that you end up with:
+- the goal and the acceptance checks
+- the partner and the playbook (build + review, build + art, propose + critique, split the work, research + verify)
+- what the agents may decide alone, and what needs the human
+- the deadline and budget (runs, hours, API dollars)
+- how to reach the human (the watchdog issue email by default; ntfy optional)
 
-## 2. Desk repo
+## 2. Desk
 
-1. Create a **private** repo `<owner>/<project>-desk` with `gh repo create --private`. Never make it public; it will hold the conversation and the work in progress.
-2. Add these files:
-   - `PROTOCOL.md`: a copy of the protocol.
-   - `BRIEF.md`
-   - `STATE.json`: every item, `phase`, `terminal: null`, and `heartbeats`.
-   - `MESSAGES.md`
-   - `GPT-LOG.md`
-   - `incoming/` (art mode) or `DECISION.md` (debate mode, filled in later).
-   - `references/` if a character or style must stay consistent.
-3. Art mode: write `ART-QUEUE.md` with exact sizes, transparency, protected pixel regions as numbers, one shared style block, and one prompt per image.
-4. Point ChatGPT at [`agents/CHATGPT.md`](../../agents/CHATGPT.md) (one short message, at the bottom of that file), or give the human the matching prompt from `prompts/`. Tell them:
-   - Use **Agent mode + the GitHub connector** (never the website).
-   - Grant the connector access to the desk repo.
-   - Schedule the chat at :00 and :30.
+1. `gh repo create <owner>/<project>-desk --private`. Never make it public.
+2. Copy `templates/desk/` in, including `.github/` and `tools/`. Also copy `START-HERE.md`, and `protocols/two-agent-desk.md` as `PROTOCOL.md`.
+3. Fill in `BRIEF.md` and `STATE.json` (agents, roles, config, the first items, each with a `next` agent). Create `status/<id>.json` for each agent.
+4. Write the partner's start message (see `agents/<platform>.md`) and give it to the human, along with any access steps.
 
-## 3. Your wake-up: it must survive this chat session
+## 3. Wake-ups that survive this session
 
-Pick the most durable option available, in this order:
+In order of preference:
+1. `claude-wake.yml` on the desk (the human adds the `CLAUDE_CODE_OAUTH_TOKEN` or `ANTHROPIC_API_KEY` secret themselves; never handle it).
+2. A cloud routine (`/schedule`) or a scheduled task in the Claude desktop app.
+3. Only as a backup on top of those: `/loop` or `Monitor` inside this session.
 
-1. **A GitHub Action on the desk repo** that runs Claude Code on every push (and on a :15/:45 schedule). It needs an `ANTHROPIC_API_KEY` secret, which the human adds.
-2. **Durable scheduled tasks** in the Claude app, if available.
-3. Only as a backup on top of one of the above: an in-session watcher (`Monitor`, re-armed every time it expires). **Never rely on session-only timers alone.** They didn't fire overnight on the first run.
+Turn on `watchdog.yml` and run it once. Never switch off a wake-up that works; only add backups.
 
-Never turn off a wake-up that is working. Only add backups.
+## 4. Proof of life: don't say goodnight until every box is ticked
 
-## 4. Bedtime checklist: don't say goodnight until every box is ticked
+- [ ] `BRIEF.md` is answered, with limits, deadline and budget.
+- [ ] `STATE.json` lists the first items, each with a `next` agent.
+- [ ] Your wake-up fired **on its own** and wrote a heartbeat. Show the human the time.
+- [ ] The partner's **scheduled** run (not its first one) wrote a heartbeat and posted `JOINED`.
+- [ ] Both agents recorded their `limits`.
+- [ ] The watchdog ran once.
+- [ ] The work branch doesn't deploy or cost money.
+- [ ] If a wake-up runs on this computer: it's plugged in and kept awake.
 
-- [ ] `BRIEF.md` is answered, and the limits are written down.
-- [ ] `STATE.json` lists every item.
-- [ ] **Your wake-up has fired once for real.** Trigger it, have it append `heartbeat OK <time>` to `MESSAGES.md`, and show the human that line.
-- [ ] ChatGPT has done one run and written its heartbeat.
-- [ ] Work happens on a branch, and you've confirmed that branch won't deploy or cost money.
-- [ ] If the wake-up runs on this computer: it's plugged in and kept awake.
+If a box can't be ticked, say plainly what that means ("If my trigger doesn't fire, nothing happens until you wake up"), and let the human decide.
 
-If any box can't be ticked, tell the human plainly which one and what that means ("If my trigger doesn't fire, nothing will happen until you wake up"). Then let them decide.
+## 5. Each run
 
-## 5. Each time you wake
-
-1. Update your heartbeat in `STATE.json`.
-2. Pull the desk repo and read new messages and `STATE.json`.
-3. Do the work that's waiting on you. Art mode: process new images, integrate them, test them, commit to the branch, mark them `integrated`, and reply. Debate mode: take your turn in the current round.
-4. If ChatGPT's heartbeat is more than 90 minutes old while work is open, post `⚠️ ChatGPT silent since <time>` and keep going on everything you can. **Exception:** if `STATE.json` → `limits.chatgpt.checkBackAt` is set, ChatGPT is paused for its usage limit, which isn't silence. Schedule one durable check for `checkBackAt`, and only nudge if nothing has happened 15 minutes after it.
-5. Stay quiet when nothing has changed.
+Follow `START-HERE.md` section D: halt check, no stacking, heartbeat, usage check (write the pause note **before** you run out), read humans first, one bounded chunk, hand off with `next`, check your partner, finish with a `lastResult`. As lead, also rewrite `STATUS.md`, break deadlocks (rule S7), and decide after the round caps (S5).
 
 ## 6. Finish
 
-1. When everything is integrated, built and tested: post `FINAL INTEGRATION COMPLETE` with the commit, and set `terminal: "claude-done"`.
-2. Keep waking until ChatGPT posts `CONFIRMED COMPLETE`.
-3. Write `MORNING.md`:
-   - what got done, with commits
-   - what didn't, and why
-   - decisions waiting on the human
-   - how to try it
-   - the exact words to ship it
-4. Never merge, publish or deploy. That's the human's call.
+Post `FINAL COMPLETE <commit>` and set `terminal: "lead-done"`. Keep waking until the partner posts `CONFIRMED COMPLETE`. Write `REPORT.md`. Never merge, publish or deploy; that's the human's call.

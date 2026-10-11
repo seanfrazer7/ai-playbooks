@@ -1,0 +1,20 @@
+{
+  "agent": "AGENT-ID",
+  "heartbeat": null,
+  "run": 0,
+  "runStartedAt": null,
+  "runFinishedAt": null,
+  "lastResult": "idle",
+  "doing": "",
+  "next": "Join the desk (START-HERE B)",
+  "schedule": "",
+  "limits": {
+    "state": "unknown",
+    "kind": "",
+    "remaining": "unknown",
+    "resetsAt": null,
+    "checkBackAt": null,
+    "source": "",
+    "updated": null
+  }
+}

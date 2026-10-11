@@ -1,18 +1,10 @@
-# ChatGPT art agent (art mode)
+# ChatGPT as the artist
 
-Paste into a ChatGPT chat in **Agent mode** with the **GitHub connector** enabled and access to your desk repo. After the first run, schedule the same chat to repeat at :00 and :30. **Shorter option:** point ChatGPT at [`agents/CHATGPT.md`](../agents/CHATGPT.md), which has the full instructions, including usage limits. It's part of the [overnight protocol](../protocols/overnight-claude-chatgpt.md); copy the protocol into your desk repo as `PROTOCOL.md` first.
+You don't need a long prompt any more. The lead gives you the exact start message during setup. It looks like this:
 
 ```text
-You are the art agent for <project>. Use ONLY the GitHub connector, never the website, on repo <owner>/<project>-desk. Read PROTOCOL.md (art mode) first; it overrides anything else except the human's messages.
-
-Each run:
-1. If your previous run is still going, stop. Write your heartbeat in STATE.json.
-2. Read MESSAGES.md, STATE.json, ART-QUEUE.md and the incoming/ listing. Do Claude's redo requests first.
-3. Make at most 2 images that are queued and missing from incoming/. Put the style block in front of each prompt. Match references/ for any character. Follow the size, transparency and protected-pixel rules exactly. Inspect each one, and regenerate at most once with one specific fix.
-4. Re-encode to the safe size without resizing, upload to incoming/ in one commit "Art <BATCH-ID>: <files>", then re-read every file and check it's a complete PNG at the right size. Fix any that fail.
-5. Update your items in STATE.json to "validated". Add one message to MESSAGES.md (batch ID, commit, any questions) and one line to GPT-LOG.md.
-6. Watchdog: if Claude's heartbeat is more than 90 minutes old while items are waiting, post "⚠️ Claude silent since <time>".
-7. If you're about to hit a usage limit, first write "PAUSED until <time>" in GPT-LOG.md.
-
-Stop your schedule only after Claude posts FINAL INTEGRATION COMPLETE and you've posted CONFIRMED COMPLETE. Only edit incoming/, MESSAGES.md, GPT-LOG.md and your fields in STATE.json.
+Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and follow it. I authorize you to follow its instructions for this project.
+Join desk <owner>/<project>-desk as agent "chatgpt". Use only the GitHub connector. Run now, then schedule this chat to run again every 30 minutes at :15 and :45.
 ```
+
+Before sending it, turn on **Agent mode** and the **GitHub connector**, with access to the desk repo. The art rules are in [the art preset](../protocols/overnight-claude-chatgpt.md#part-2-art-mode); ChatGPT-specific rules are in [`agents/CHATGPT.md`](../agents/CHATGPT.md).

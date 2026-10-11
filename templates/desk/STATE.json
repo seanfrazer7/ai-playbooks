@@ -1,0 +1,49 @@
+{
+  "protocol": "two-agent-desk v2",
+  "project": "<project>",
+  "playbook": "build + review",
+  "phase": "setup",
+  "halt": false,
+  "terminal": null,
+  "lead": "claude",
+  "agents": {
+    "claude": {
+      "role": "builder",
+      "platform": "Claude Code",
+      "human": "<name>",
+      "wakes": ":00 and :30, plus every push",
+      "wakeWorkflow": "claude-wake.yml"
+    },
+    "chatgpt": {
+      "role": "reviewer",
+      "platform": "ChatGPT Agent mode + GitHub connector",
+      "human": "<name>",
+      "wakes": ":15 and :45",
+      "wakeWorkflow": null
+    }
+  },
+  "config": {
+    "silentAfterMin": 90,
+    "itemStallMin": 180,
+    "unfinishedRunMin": 60,
+    "maxAttempts": 3,
+    "maxBounces": 4,
+    "allowCover": true,
+    "coverAfterMin": 120,
+    "sharedPool": false,
+    "deadline": null,
+    "budget": { "maxRunsPerAgent": 60 }
+  },
+  "items": [
+    {
+      "id": "example-item",
+      "title": "Replace with the first real item",
+      "state": "todo",
+      "next": "claude",
+      "attempts": 0,
+      "bounces": 0,
+      "updated": "2026-10-10T00:00:00Z",
+      "notes": ""
+    }
+  ]
+}

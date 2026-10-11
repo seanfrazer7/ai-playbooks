@@ -1,0 +1,74 @@
+# Desk watchdog: checks for stuck or silent agents every 30 minutes.
+# Uses no AI and no credits, only about 1 minute of GitHub Actions time per run.
+# Opens a "Desk watchdog" issue (GitHub emails the repo owner) and closes it when all is clear.
+# Optional: add an NTFY_TOPIC secret (a long random name) to also get a phone push from ntfy.sh.
+name: Desk watchdog
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: desk-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the desk
+        id: check
+        run: |
+          set +e
+          python3 -I tools/watchdog.py . --out alerts.md --wake-out wake.txt
+          code=$?
+          set -e
+          [ "$code" -eq 0 ] || [ "$code" -eq 1 ] || [ "$code" -eq 3 ] || exit "$code"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "fp=$(cat alerts.md.fp)" >> "$GITHUB_OUTPUT"
+
+      - name: Report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          CODE: ${{ steps.check.outputs.code }}
+          FP: ${{ steps.check.outputs.fp }}
+        run: |
+          gh label create watchdog --color D93F0B --description "Desk watchdog alerts" --force >/dev/null
+          num=$(gh issue list --label watchdog --state open --json number --jq '.[0].number // empty')
+          notify() {
+            if [ -n "$NTFY_TOPIC" ]; then
+              curl -s -H "Title: Desk watchdog" -d "$1 See the Desk watchdog issue in the desk repo." "https://ntfy.sh/$NTFY_TOPIC" >/dev/null || true
+            fi
+          }
+          if [ "$CODE" = "1" ]; then
+            if [ -z "$num" ]; then
+              gh issue create --title "Desk watchdog" --label watchdog --body-file alerts.md
+              notify "Something on the desk needs attention."
+            else
+              last=$(gh issue view "$num" --json body,comments --jq '([.body] + [.comments[].body]) | last')
+              if ! printf '%s' "$last" | grep -q "fp:$FP"; then
+                gh issue comment "$num" --body-file alerts.md
+                notify "The desk's alerts changed."
+              fi
+            fi
+            while read -r wf; do
+              [ -n "$wf" ] && gh workflow run "$wf" || true
+            done < wake.txt
+          elif [ -n "$num" ]; then
+            gh issue comment "$num" --body-file alerts.md
+            gh issue close "$num"
+          fi
+          if [ "$CODE" = "3" ]; then
+            notify "The run is finished or halted."
+            gh workflow disable watchdog.yml
+          fi
