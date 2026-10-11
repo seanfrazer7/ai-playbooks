@@ -11,7 +11,7 @@ name: Claude wake
 
 on:
   schedule:
-    - cron: "0,30 * * * *"
+    - cron: "11,41 * * * *"   # off the busy :00 and :30 slots
   push:
     branches: [main]
     paths: ["desks/**"]
