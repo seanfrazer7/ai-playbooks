@@ -68,6 +68,8 @@ You are the **lead**. You set up the desk, break ties, and write the final repor
 6. **Run the proof-of-life check** ([protocol §8](protocols/two-agent-desk.md#8-proof-of-life-before-the-human-leaves)). Tell the human the result, one checkbox per line. If anything fails, say exactly what that means, e.g. "If my schedule doesn't fire, nothing happens until you wake up."
 7. Start the run loop.
 
+**Order matters: set up first, build second.** Don't start the real work until steps 3–5 are done (desk created, your wake-up fired once, partner message handed over). The setup is what keeps the run going after the human leaves. Building first turns it into an ordinary chat that stops when the chat does. You may build while waiting for proof of life (step 6), and do all work on the project's work branch, never `main`.
+
 ### B. If you're joining a desk
 
 1. Read the desk's `BRIEF.md`, `STATE.json`, your own `status/<id>.json`, and the protocol copy in the desk. **The desk's copy wins** if it differs from this one.
