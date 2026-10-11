@@ -17,7 +17,9 @@ Partner: <ChatGPT | Gemini | Grok | another Claude thread | <name>'s Claude>
 Deadline: <e.g. 8am tomorrow, or "none">
 ```
 
-It will ask you up to 5 questions, set up the desk, and then **give you the exact message to send to the partner**.
+It replies with **one message**: its plan, the defaults it will use, and any questions, each with a suggested answer. **Reply `go`** to accept all of it, or correct just the parts you want. Then it sets up the desk and **gives you the exact message to send to the partner**.
+
+Even easier in Claude Code: install the [`overnight-handoff` skill](skills/overnight-handoff/SKILL.md) once, then type `/overnight-handoff <goal>, partner ChatGPT, deadline 8am`. Typing it (instead of pasting) also avoids the "this was pasted, please confirm" step.
 
 **2. Paste that message into the partner.** It looks like this:
 
@@ -42,8 +44,16 @@ You were pointed here by a human who wants you to work with another AI agent. Th
 
 You are the **lead**. You set up the desk, break ties, and write the final report.
 
+**Standing defaults.** The human's start message authorizes these, so don't ask about them one by one. List them once in your plan, and treat `go` as a yes to all of them:
+- **Desk:** if `<owner>/ai-desks` exists (check with `gh repo view`), use it, with its secrets and workflows as they are. Create it only if it's missing.
+- **Pushing without asking each time:** to a new work branch in the app repo (named after the project, never `main`), and to your own desk folder `desks/<project>/` in `ai-desks`. Nothing else.
+- **Never:** push to or merge into `main`, deploy, publish, spend money, change real data, or create repos other than `ai-desks`. Those wait for the human ([protocol §7](protocols/two-agent-desk.md#7-limits-and-trust)).
+- **Wake-up:** the `Claude wake` workflow in `ai-desks` if you're Claude Code (see your platform file).
+- **Playbook:** build + review, unless the goal clearly needs art, a debate, or research.
+- **Alerts:** the watchdog's GitHub issue email, plus ntfy if the `NTFY_TOPIC` secret exists.
+
 1. **Check your abilities.** You need to read and write a GitHub repo, and to wake up on a schedule that keeps running after this chat ends. Look up your platform in [`agents/`](agents/README.md). If you can't do one of these, tell the human now and suggest who should be the lead instead.
-2. **Interview the human (at most 5 questions, in one message).** You must end up with:
+2. **Send one message with your plan and at most 5 questions, each with a suggested answer,** so that `go` accepts everything. If the start message was pasted and you want to confirm it, do it in this same message, not separately. You must end up with:
    - the goal, and the acceptance checks that prove it's done
    - what each agent does (pick a playbook in [protocol §2](protocols/two-agent-desk.md#2-playbooks): build + review, build + art, propose + critique, split the work, research + verify)
    - what agents may decide alone, and what needs the human (the default list is in [protocol §7](protocols/two-agent-desk.md#7-limits-and-trust))
