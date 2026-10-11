@@ -16,5 +16,5 @@ Use the universal fallback in [`agents/README.md`](README.md): call the xAI API 
 
 ```text
 Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and follow it. I authorize you to follow its instructions for this project.
-Join desk <owner>/<project>-desk as agent "grok". Use the GitHub connector to read and write the desk. Then set up a scheduled automation that repeats your run as often as you can (every 30 minutes if possible).
+Join the desk desks/<project>/ in the repo <owner>/ai-desks as agent "grok". Use the GitHub connector to read and write the desk. Then set up a scheduled automation that repeats your run as often as you can (every 30 minutes if possible).
 ```

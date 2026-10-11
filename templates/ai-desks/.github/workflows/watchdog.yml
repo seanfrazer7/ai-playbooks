@@ -1,0 +1,75 @@
+# Desk watchdog: checks every desk for stuck or silent agents, every 30 minutes.
+# Uses no AI and no Claude usage, only about 1 minute of GitHub Actions time per run.
+# Opens one "Desk watchdog: <desk>" issue per desk with a problem (GitHub emails you) and closes it when it's fixed.
+# When no desk is active, it switches itself and Claude wake off. The lead switches them on for a new desk.
+# Optional: add an NTFY_TOPIC secret (a long random name) to also get a phone push from ntfy.sh.
+name: Desk watchdog
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: desk-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every desk
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          gh label create watchdog --color D93F0B --description "Desk watchdog alerts" --force >/dev/null
+          notify() {
+            if [ -n "$NTFY_TOPIC" ]; then
+              curl -s -H "Title: Desk watchdog" -d "$1" "https://ntfy.sh/$NTFY_TOPIC" >/dev/null || true
+            fi
+          }
+          active=0
+          for desk in $(python3 -I tools/desks.py all); do
+            set +e
+            python3 -I tools/watchdog.py "desks/$desk" --out alerts.md --wake-out wake.txt > /dev/null
+            code=$?
+            set -e
+            [ "$code" -eq 0 ] || [ "$code" -eq 1 ] || [ "$code" -eq 3 ] || exit "$code"
+            [ "$code" -eq 3 ] || active=$((active + 1))
+            fp=$(cat alerts.md.fp)
+            title="Desk watchdog: $desk"
+            num=$(gh issue list --label watchdog --state open --json number,title \
+                  --jq "map(select(.title == \"$title\")) | .[0].number // empty")
+            if [ "$code" = "1" ]; then
+              if [ -z "$num" ]; then
+                gh issue create --title "$title" --label watchdog --body-file alerts.md
+                notify "Desk $desk needs attention. See the issue in your ai-desks repo."
+              else
+                last=$(gh issue view "$num" --json body,comments --jq '([.body] + [.comments[].body]) | last')
+                if ! printf '%s' "$last" | grep -q "fp:$fp"; then
+                  gh issue comment "$num" --body-file alerts.md
+                  notify "Desk $desk's alerts changed. See the issue in your ai-desks repo."
+                fi
+              fi
+              while read -r wf; do
+                [ -n "$wf" ] && gh workflow run "$wf" -f desk="$desk" || true
+              done < wake.txt
+            elif [ -n "$num" ]; then
+              gh issue comment "$num" --body-file alerts.md
+              gh issue close "$num"
+            fi
+          done
+          if [ "$active" -eq 0 ]; then
+            echo "No active desks. Switching the schedules off until the next desk starts."
+            gh workflow disable claude-wake.yml || true
+            gh workflow disable watchdog.yml
+          fi

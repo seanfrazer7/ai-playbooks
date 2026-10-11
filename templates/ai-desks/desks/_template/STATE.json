@@ -1,6 +1,8 @@
 {
   "protocol": "two-agent-desk v2",
   "project": "<project>",
+  "appRepo": "<owner>/<app-repo> or null",
+  "appBranch": "<work-branch>",
   "playbook": "build + review",
   "phase": "setup",
   "halt": false,
@@ -32,7 +34,9 @@
     "coverAfterMin": 120,
     "sharedPool": false,
     "deadline": null,
-    "budget": { "maxRunsPerAgent": 60 }
+    "budget": {
+      "maxRunsPerAgent": 60
+    }
   },
   "items": [
     {

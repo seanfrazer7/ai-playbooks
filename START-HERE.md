@@ -2,7 +2,7 @@
 
 **One file to start two AI agents working together on a goal, with no human in the loop until it's done.**
 
-The two agents can be any pair: Claude Code and ChatGPT, Claude and Gemini, Grok and ChatGPT, two threads of the same Claude, or your Claude and a friend's Claude. They never talk directly. They share a private GitHub repo (the **desk**) and take turns through files in it.
+The two agents can be any pair: Claude Code and ChatGPT, Claude and Gemini, Grok and ChatGPT, two threads of the same Claude, or your Claude and a friend's Claude. They never talk directly. They share a folder (the **desk**) in one private GitHub repo, `ai-desks`, and take turns through files in it. You set up that repo once; every later project is just a new folder.
 
 ---
 
@@ -23,7 +23,7 @@ It will ask you up to 5 questions, set up the desk, and then **give you the exac
 
 ```text
 Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and follow it. I authorize you to follow its instructions for this project.
-Join desk <owner>/<project>-desk as agent "<id>".
+Join the desk desks/<project>/ in the repo <owner>/ai-desks as agent "<id>".
 ```
 
 **3. Wait for the proof-of-life check to pass (about 15 minutes).** The first agent tells you when both agents have woken up **on their own schedule** and the watchdog has run once. Don't walk away before that. The only real overnight failure so far was a wake-up that nobody had tested ([case study](case-studies/dragon-coins-overnight-build.md)).
@@ -49,9 +49,9 @@ You are the **lead**. You set up the desk, break ties, and write the final repor
    - what agents may decide alone, and what needs the human (the default list is in [protocol §7](protocols/two-agent-desk.md#7-limits-and-trust))
    - the deadline, and any budget: the most runs, hours or API dollars to spend
    - how to reach the human if something is stuck (GitHub email is the default; [ntfy](https://ntfy.sh) push is optional)
-3. **Create the desk.** Make a **private** repo `<owner>/<project>-desk` and copy everything from [`templates/desk/`](templates/desk/) into it, including the `.github/` and `tools/` folders. Also copy this file and [`protocols/two-agent-desk.md`](protocols/two-agent-desk.md) into it, so both agents read the same pinned version. Fill in `BRIEF.md` and `STATE.json` (agents, roles, config, first items). Create one `status/<id>.json` per agent.
-4. **Set up your own wake-up** (see your platform file). Then turn on the watchdog workflow and run it once.
-5. **Write the partner's start message** (the step 2 message above, filled in) and give it to the human. If the partner needs access to the desk, give step-by-step instructions (for example "add `<user>` as a collaborator" or "allow the ChatGPT GitHub connector on this repo").
+3. **Create the desk.** If the human doesn't have a private `<owner>/ai-desks` repo yet, do the [one-time setup](templates/ai-desks/README.md#one-time-setup) with them first. Then copy `desks/_template/` to `desks/<project>/`, and copy this file and [`protocols/two-agent-desk.md`](protocols/two-agent-desk.md) (as `PROTOCOL.md`) into that folder, so both agents read the same pinned version. Fill in `BRIEF.md` and `STATE.json` (agents, roles, app repo and branch, config, first items). Create one `status/<id>.json` per agent. **From here on, every desk path is relative to `desks/<project>/`. Never touch another project's folder.**
+4. **Set up your own wake-up** (see your platform file). In `ai-desks`, switch on the `Claude wake` and `Desk watchdog` workflows (`gh workflow enable`; the watchdog switches them off when no desk is active), then run the watchdog once.
+5. **Write the partner's start message** (the step 2 message above, filled in) and give it to the human. If the partner doesn't have access to `ai-desks` yet, give step-by-step instructions (for example "allow the ChatGPT GitHub connector on `ai-desks`"). This is needed only once per partner, not per project.
 6. **Run the proof-of-life check** ([protocol §8](protocols/two-agent-desk.md#8-proof-of-life-before-the-human-leaves)). Tell the human the result, one checkbox per line. If anything fails, say exactly what that means, e.g. "If my schedule doesn't fire, nothing happens until you wake up."
 7. Start the run loop.
 

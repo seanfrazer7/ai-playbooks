@@ -1,6 +1,6 @@
 ---
 name: overnight-handoff
-description: Set up and lead a two-agent run where Claude Code works with another AI (ChatGPT, Gemini, Grok, another Claude thread, or someone else's agent) through a private GitHub desk repo while the human is away. Creates the desk from the template, writes the partner's start message, sets up durable wake-ups and a zero-credit watchdog, and won't say goodnight until proof of life passes. Use when the user wants work to continue overnight or unattended with a second AI helping.
+description: Set up and lead a two-agent run where Claude Code works with another AI (ChatGPT, Gemini, Grok, another Claude thread, or someone else's agent) through a desk folder in the human's private ai-desks repo while the human is away. Creates the desk from the template (and the ai-desks repo the first time), writes the partner's start message, sets up durable wake-ups and a zero-credit watchdog, and won't say goodnight until proof of life passes. Use when the user wants work to continue overnight or unattended with a second AI helping.
 ---
 
 # Overnight handoff (two-agent desk lead)
@@ -20,19 +20,19 @@ Ask at most 5 questions, in one message, so that you end up with:
 
 ## 2. Desk
 
-1. `gh repo create <owner>/<project>-desk --private`. Never make it public.
-2. Copy `templates/desk/` in, including `.github/` and `tools/`. Also copy `START-HERE.md`, and `protocols/two-agent-desk.md` as `PROTOCOL.md`.
+1. **First time only:** if `<owner>/ai-desks` doesn't exist, create it as a **private** repo from `templates/ai-desks/`, and walk the human through its one-time setup. The human adds the `CLAUDE_CODE_OAUTH_TOKEN` secret themselves (`claude setup-token`, then `gh secret set`). Never handle the token.
+2. Copy `desks/_template/` to `desks/<project>/`. Also copy `START-HERE.md`, and `protocols/two-agent-desk.md` as `PROTOCOL.md`, into that folder. All desk paths are relative to it.
 3. Fill in `BRIEF.md` and `STATE.json` (agents, roles, config, the first items, each with a `next` agent). Create `status/<id>.json` for each agent.
 4. Write the partner's start message (see `agents/<platform>.md`) and give it to the human, along with any access steps.
 
 ## 3. Wake-ups that survive this session
 
 In order of preference:
-1. `claude-wake.yml` on the desk (the human adds the `CLAUDE_CODE_OAUTH_TOKEN` or `ANTHROPIC_API_KEY` secret themselves; never handle it).
+1. `claude-wake.yml` in `ai-desks`. It uses the human's Claude plan through the secret from the one-time setup. Run `gh workflow enable claude-wake.yml`, then `gh workflow run claude-wake.yml -f desk=<project>`.
 2. A cloud routine (`/schedule`) or a scheduled task in the Claude desktop app.
 3. Only as a backup on top of those: `/loop` or `Monitor` inside this session.
 
-Turn on `watchdog.yml` and run it once. Never switch off a wake-up that works; only add backups.
+Enable `watchdog.yml` and run it once. Never switch off a wake-up that works; only add backups.
 
 ## 4. Proof of life: don't say goodnight until every box is ticked
 

@@ -28,4 +28,4 @@ That's usually Claude Code, or Gemini CLI / Codex CLI. A chat-only agent (ChatGP
 
 ## The universal fallback
 
-Any model with an API can be a desk agent by running inside a GitHub Action on the desk repo: on a schedule, on every push, and when the watchdog asks. [`claude-wake.yml`](../templates/desk/.github/workflows/claude-wake.yml) is the pattern. Swap in the vendor's own action or CLI (e.g. `google-github-actions/run-gemini-cli`, OpenAI's Codex CLI). This costs API money, so set a spend limit with the vendor and a `budget` in `BRIEF.md`.
+Any model with an API can be a desk agent by running inside a GitHub Action on the desk repo: on a schedule, on every push, and when the watchdog asks. [`claude-wake.yml`](../templates/ai-desks/.github/workflows/claude-wake.yml) is the pattern. Swap in the vendor's own action or CLI (e.g. `google-github-actions/run-gemini-cli`, OpenAI's Codex CLI). This costs API money, so set a spend limit with the vendor and a `budget` in `BRIEF.md`.

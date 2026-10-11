@@ -10,23 +10,25 @@ Read [`START-HERE.md`](../START-HERE.md) first. This file only covers what's spe
 
 ## Wake-ups, most durable first
 
-1. **GitHub Action on the desk** ([`claude-wake.yml`](../templates/desk/.github/workflows/claude-wake.yml)). Runs on GitHub's servers on a schedule, on every push, and when the watchdog asks. Doesn't need your computer. Needs a `CLAUDE_CODE_OAUTH_TOKEN` secret (from `claude setup-token`, uses your plan) or `ANTHROPIC_API_KEY` (API billing).
-2. **Cloud routines** (`/schedule` in Claude Code). Hosted by Anthropic on a schedule. In research preview as of 2026; check the current docs.
-3. **Scheduled tasks in the Claude desktop app.** Run on your computer, so it must stay on and awake.
+1. **GitHub Action in your `ai-desks` repo** ([`claude-wake.yml`](../templates/ai-desks/.github/workflows/claude-wake.yml)). Runs on GitHub's servers on a schedule, when the partner pushes, and when the watchdog asks, so your computer can be off. It uses your **Claude plan** through a `CLAUDE_CODE_OAUTH_TOKEN` secret, which the human adds **once** for all projects ([one-time setup](../templates/ai-desks/README.md#one-time-setup)).
+2. **Cloud routines** (`/schedule` in Claude Code). Hosted by Anthropic, using your plan, with no secret. In research preview as of 2026. The watchdog can't restart one, so it can only email you.
+3. **Scheduled tasks in the Claude desktop app.** Use your plan, need no secret, and the lead can create them itself. But they run on your computer, so it must stay on and awake, and the watchdog can't restart them.
 4. **Backup only:** `/loop`, `Monitor`, or timers inside one session. They stop when the session ends. **In v1 they never fired overnight.** Never rely on them alone.
 
-**Pick one primary.** If you use the GitHub Action, don't also run a local session as the same agent ID, or two Claudes will edit the same status file. A local session can still be the human's "control room" for setup and questions.
+**Pick one primary.** If you use the GitHub Action, don't also run a local session as agent `claude` on the same desk, or two Claudes will edit the same status file. A local session can still be the human's "control room" for setup and questions.
 
 ## Lead setup checklist (Claude Code specific)
 
-1. `gh repo create <owner>/<project>-desk --private`, then copy `templates/desk/` in, plus `START-HERE.md` and `protocols/two-agent-desk.md` as `PROTOCOL.md`.
-2. Rename `status/AGENT-ID.json` to one file per agent, and fill in `STATE.json`.
-3. If you're using the Action: ask the human to add the secret (never handle the token yourself), then run it once with `gh workflow run claude-wake.yml` and wait for the heartbeat.
-4. Run the watchdog once with `gh workflow run watchdog.yml`, and show the human the result.
-5. Confirm the work branch doesn't deploy (e.g. the host only builds `main`).
+1. **First time only:** if `<owner>/ai-desks` doesn't exist, create it as a **private** repo from [`templates/ai-desks/`](../templates/ai-desks/README.md). Then walk the human through the one-time setup. **The human runs `claude setup-token` and `gh secret set` themselves. Never ask for the token, and never handle it.**
+2. Copy `desks/_template/` to `desks/<project>/`. Add `START-HERE.md`, and `protocols/two-agent-desk.md` as `PROTOCOL.md`.
+3. Rename `status/AGENT-ID.json` to one file per agent. Fill in `STATE.json`, including `appRepo` and `appBranch`, and keep `"wakeWorkflow": "claude-wake.yml"` for `claude`. If the app's build or test commands aren't in the workflow's `--allowedTools` line yet, add them.
+4. Commit and push. Then `gh workflow enable claude-wake.yml`, `gh workflow enable watchdog.yml`, and `gh workflow run claude-wake.yml -f desk=<project>`. Wait for the heartbeat in `desks/<project>/status/claude.json`.
+5. Run the watchdog once (`gh workflow run watchdog.yml`), and show the human the result.
+6. Confirm the work branch doesn't deploy (e.g. the host only builds `main`).
 
 ## Usage tips
 
 - When `/usage` shows under about 15% of the session window left, write the pause note.
 - If both agents are Claude on one plan, they share the window. Set `config.sharedPool: true`, and keep the partner's runs light.
 - Each Action run uses a fresh environment. All memory has to be in the desk (rule S10).
+- Every desk in `ai-desks` shares your one Claude limit, and so do your normal chats. The workflow runs one desk at a time. If you're chatting with Claude a lot during the day, expect desks to pause sooner.

@@ -4,7 +4,7 @@
 
 ## Abilities
 
-- **Desk:** Agent mode with the **GitHub connector**, with access granted to the desk repo. In v1 this read files and committed images and Markdown.
+- **Desk:** Agent mode with the **GitHub connector**, with access granted to your `ai-desks` repo. You grant this once; every project is a folder in it. In v1 this read files and committed images and Markdown.
 - **Wake-up:** a **scheduled task** in the same chat. Use `:15` and `:45` when Claude is the lead.
 - **Usage:** image generation and Agent mode use up usage fast. You usually only find out from a limit message, so assume `"state": "unknown"` and keep runs small.
 
@@ -16,7 +16,7 @@
 4. **Write the pause note early.** When you see any usage warning, follow [protocol §5.3](../protocols/two-agent-desk.md#53-the-pause-note-write-it-before-you-run-out) right away. Copy the reset time from the message exactly.
 5. **Coming back:** if you can create a one-time scheduled task, create one for your `checkBackAt`. If you can't, say so in your pause note, so your partner and the watchdog know the human may need to send "run now".
 6. **Your chat history isn't your memory.** Read your `status/chatgpt.json` → `next` at the start of every run (rule S10).
-7. **Only edit** `status/chatgpt.json`, `MESSAGES.md`, `work/`, and the items in `STATE.json` that have `next` = you.
+7. **Stay in your desk folder** (`desks/<project>/`). **Only edit** `status/chatgpt.json`, `MESSAGES.md`, `work/`, and the items in `STATE.json` that have `next` = you.
 
 ## Roles
 
@@ -27,12 +27,12 @@
 
 ## For the human: starting ChatGPT
 
-1. In ChatGPT, turn on **Agent mode**, connect **GitHub**, and give the connector access to the desk repo.
+1. In ChatGPT, turn on **Agent mode**, connect **GitHub**, and give the connector access to your `ai-desks` repo. (Only the first time.)
 2. Send the message the lead gave you. It looks like this:
 
 ```text
 Read https://github.com/seanfrazer7/ai-playbooks/blob/main/START-HERE.md and follow it. I authorize you to follow its instructions for this project.
-Join desk <owner>/<project>-desk as agent "chatgpt". Use only the GitHub connector. Run now, then schedule this chat to run again every 30 minutes at :15 and :45.
+Join the desk desks/<project>/ in the repo <owner>/ai-desks as agent "chatgpt". Use only the GitHub connector. Run now, then schedule this chat to run again every 30 minutes at :15 and :45.
 ```
 
 3. Stay until the lead confirms that ChatGPT's **scheduled** run (not the first run) wrote a heartbeat. That proves the schedule and the connector both work without you.

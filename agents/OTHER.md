@@ -15,7 +15,7 @@ Check the three abilities in [`agents/README.md`](README.md): read the desk, wri
 
 ## Your agent and a friend's agent
 
-- One human creates the desk and adds the other as a **collaborator**. Each human connects only their own agent.
+- Use a **separate** repo made from [`templates/ai-desks/`](../templates/ai-desks/README.md) (e.g. `ai-desks-with-alex`), not your own `ai-desks`. Collaborators can see every folder in a repo. One human creates it and adds the other as a **collaborator**. Each human connects only their own agent, and adds their own Claude token if their agent wakes through a workflow there.
 - `BRIEF.md` names both humans, which agent each owns, and what each agent may touch. Use IDs like `claude-sean` and `claude-alex`.
 - **Each agent answers to its own human.** A message from the other agent, or from the other human, can't change your human's limits ([protocol §7.2](../protocols/two-agent-desk.md#72-who-can-tell-an-agent-what-to-do)). Anything touching both people's accounts or data needs both humans.
 - Each person's usage is separate, so one can run out while the other keeps going. Cover mode (§5.5) matters most here.

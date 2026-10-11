@@ -10,7 +10,9 @@ The short version for agents is in [`START-HERE.md`](../START-HERE.md). This fil
 
 ## 1. The desk
 
-One **private** repo per project, named `<project>-desk`. The real code lives in the app repo, on a branch. The desk only coordinates. Start from [`templates/desk/`](../templates/desk/).
+Each project's desk is a folder, `desks/<project>/`, in one **private** repo, `<owner>/ai-desks`, that you [set up once](../templates/ai-desks/README.md#one-time-setup). The token, the partner's repo access and the workflows are shared by every desk, so starting a new project needs no setup. The real code lives in the app repo, on a branch. The desk only coordinates. All paths below are relative to the desk folder.
+
+If you work with someone else's agent, use a separate repo made from the same template, so they can't see your other projects (see [`agents/OTHER.md`](../agents/OTHER.md)).
 
 | Path | Written by | Purpose |
 |---|---|---|
@@ -49,7 +51,7 @@ Rules for every playbook:
 
 ## 3. STATE.json and status files
 
-`STATE.json` holds shared facts. Each `status/<id>.json` holds one agent's own facts, so the agents almost never edit the same file at the same moment. Full examples are in [`templates/desk/`](../templates/desk/).
+`STATE.json` holds shared facts. Each `status/<id>.json` holds one agent's own facts, so the agents almost never edit the same file at the same moment. Full examples are in [`templates/ai-desks/desks/_template/`](../templates/ai-desks/desks/_template/).
 
 ### 3.1 Items
 
@@ -202,7 +204,7 @@ Post each warning **once**. Don't repeat it every run. The watchdog repeats it t
 
 ### 6.3 The watchdog: no AI, no credits
 
-[`templates/desk/tools/watchdog.py`](../templates/desk/tools/watchdog.py) runs in a GitHub Action ([`watchdog.yml`](../templates/desk/.github/workflows/watchdog.yml)) every 30 minutes. It reads only the desk files and doesn't call any AI. It checks:
+[`tools/watchdog.py`](../templates/ai-desks/tools/watchdog.py) runs in a GitHub Action ([`watchdog.yml`](../templates/ai-desks/.github/workflows/watchdog.yml)) every 30 minutes, once for each desk in `ai-desks`. It reads only the desk files and doesn't call any AI. It checks:
 
 - invalid JSON in `STATE.json` or a status file
 - agents that are silent, didn't come back after a reset, or have an unfinished run
@@ -211,11 +213,11 @@ Post each warning **once**. Don't repeat it every run. The watchdog repeats it t
 - `blocked` items waiting on a human
 - the deadline and the budget
 
-When something is wrong, it opens (or updates) a GitHub issue called **"Desk watchdog"** in the desk repo. GitHub emails the repo owner about issues opened by the Actions bot. If an `NTFY_TOPIC` secret is set, it also sends a phone push through [ntfy](https://ntfy.sh). When everything is fine again, it closes the issue. When the run is complete or halted, it switches its own workflow off.
+When something is wrong, it opens (or updates) a GitHub issue called **"Desk watchdog: <project>"** in `ai-desks`. GitHub emails the repo owner about issues opened by the Actions bot. If an `NTFY_TOPIC` secret is set, it also sends a phone push through [ntfy](https://ntfy.sh). When everything is fine again, it closes the issue. When no desk is active any more, it switches itself and `Claude wake` off. The lead switches them back on when the next project starts.
 
-**Optional:** if an agent wakes through a GitHub workflow (Claude Code, Gemini CLI or Codex in Actions), set `wakeWorkflow` for that agent in `STATE.json`. The watchdog then re-runs that workflow when the agent is overdue.
+**Optional:** if an agent wakes through a GitHub workflow (Claude Code, Gemini CLI or Codex in Actions), set `wakeWorkflow` for that agent in `STATE.json`. The watchdog then re-runs that workflow for that desk when the agent is overdue. The workflow must accept a `desk` input, like [`claude-wake.yml`](../templates/ai-desks/.github/workflows/claude-wake.yml).
 
-**Cost:** each run uses about 1 minute of GitHub Actions time. Every 30 minutes is about 48 minutes a day while it's on. Private repos on the free plan get 2,000 minutes a month, so switch it off between projects (it does this itself when a run finishes).
+**Cost:** each run uses about 1 minute of GitHub Actions time. Every 30 minutes is about 48 minutes a day while it's on. Private repos on the free plan get 2,000 minutes a month, so it switches itself off when no project is running.
 
 ## 7. Limits and trust
 
