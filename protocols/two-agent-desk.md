@@ -275,3 +275,5 @@ If a box can't be ticked, the lead says plainly what that means, and the human d
    - usage: runs per agent, pauses, total time
    - the exact words the human says to ship it
 5. Never merge, publish or deploy. That's the human's call.
+
+**If the result needs the human's approval** (publishing, merging, sign-off), still finish the handshake when the agents' work is done, and put the approval request in `REPORT.md`. Waiting on the human inside the run keeps both agents waking up and spending usage for nothing.
