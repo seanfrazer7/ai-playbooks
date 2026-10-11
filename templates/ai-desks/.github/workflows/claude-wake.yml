@@ -33,6 +33,11 @@ jobs:
     if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 3
+    # Agents often push several commits within seconds. Pushes and the schedule share one group that
+    # cancels older waiting picks, and each pick waits 30 s first, so a burst wakes Claude once.
+    concurrency:
+      group: ${{ github.event_name == 'workflow_dispatch' && format('pick-{0}', github.run_id) || 'claude-pick' }}
+      cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
     outputs:
       desks: ${{ steps.pick.outputs.desks }}
     steps:
@@ -43,7 +48,6 @@ jobs:
         env:
           EVENT: ${{ github.event_name }}
           ONLY: ${{ github.event.inputs.desk }}
-          BEFORE: ${{ github.event.before }}
           HAS_KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -53,9 +57,12 @@ jobs:
           fi
           args="--agent claude"
           [ -z "$ONLY" ] || args="$args --only $ONLY"
-          if [ "$EVENT" = "push" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
+          if [ "$EVENT" = "push" ]; then
+            sleep 30
+            git fetch -q origin main && git checkout -q origin/main
+            # Everything pushed in the last few minutes (a cancelled pick's pushes count too).
             # Heartbeat-only commits (status files) don't wake Claude; messages, state and work do.
-            git diff --name-only "$BEFORE" HEAD > changed.txt
+            git log --since="3 minutes ago" --name-only --format= origin/main > changed.txt
             args="$args --changed changed.txt"
           fi
           desks=$(python3 -I tools/desks.py wake $args)
