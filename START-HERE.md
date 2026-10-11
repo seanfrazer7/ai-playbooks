@@ -50,7 +50,7 @@ You are the **lead**. You set up the desk, break ties, and write the final repor
 **Standing defaults.** The human's start message authorizes these, so don't ask about them one by one. List them once in your plan, and treat `go` as a yes to all of them:
 - **Desk:** if `<owner>/ai-desks` exists (check with `gh repo view`), use it, with its workflows as they are. Create it only if it's missing. **Never list, read or check secrets.** The first `Claude wake` run proves they work; if it fails, the run log says which secret is missing.
 - **Pushing without asking each time:** to a new work branch in the app repo (named after the project, never `main`), and to your own desk folder `desks/<project>/` in `ai-desks`. Nothing else.
-- **Never:** push to or merge into `main`, deploy, publish, spend money, change real data, or create repos other than `ai-desks`. Those wait for the human ([protocol §7](protocols/two-agent-desk.md#7-limits-and-trust)).
+- **Never:** push to or merge into `main`, deploy, publish, spend money, change real data, or create repos other than `ai-desks`. **Don't open pull requests** unless the human asks: many hosts (e.g. Netlify) build a deploy preview for every PR, which can cost credits. Finish at a pushed branch, and say how to try it. Those wait for the human ([protocol §7](protocols/two-agent-desk.md#7-limits-and-trust)).
 - **Wake-up:** the `Claude wake` workflow in `ai-desks` if you're Claude Code (see your platform file).
 - **Playbook:** build + review, unless the goal clearly needs art, a debate, or research.
 - **Alerts:** the watchdog's GitHub issue email, plus ntfy if the `NTFY_TOPIC` secret exists.
