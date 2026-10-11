@@ -25,6 +25,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 jobs:
   pick:
@@ -44,6 +45,7 @@ jobs:
           ONLY: ${{ github.event.inputs.desk }}
           BEFORE: ${{ github.event.before }}
           HAS_KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "$HAS_KEY" != "true" ]; then
             echo "::notice::No CLAUDE_CODE_OAUTH_TOKEN secret yet, so Claude won't run."
@@ -56,7 +58,17 @@ jobs:
             git diff --name-only "$BEFORE" HEAD > changed.txt
             args="$args --changed changed.txt"
           fi
-          echo "desks=$(python3 -I tools/desks.py wake $args)" >> "$GITHUB_OUTPUT"
+          desks=$(python3 -I tools/desks.py wake $args)
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "desks=$desks" >> "$GITHUB_OUTPUT"
+          else
+            # claude-code-action only runs on some event types (not push), so pushes and the schedule
+            # re-start this workflow once per desk as a manual (workflow_dispatch) run, which it supports.
+            echo "desks=[]" >> "$GITHUB_OUTPUT"
+            for d in $(printf '%s' "$desks" | python3 -c "import json,sys; print(' '.join(x['desk'] for x in json.load(sys.stdin)))"); do
+              gh workflow run claude-wake.yml -f desk="$d" && echo "Started Claude for $d"
+            done
+          fi
 
   run:
     needs: pick
