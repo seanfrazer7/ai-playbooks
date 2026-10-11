@@ -60,6 +60,11 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The action only allows basic GitHub tools by default. Claude needs git to commit to the desk.
+          # Add build/test commands for the app repo here too, e.g. Bash(npm run build),Bash(npm test).
+          claude_args: >-
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git:*),Bash(python3 tools/watchdog.py:*)"
+            --max-turns 40
           prompt: |
             You are agent "claude" on this two-agent desk. This run was started by "${{ github.event_name }}".
             Do exactly one run as described in START-HERE.md section D, following PROTOCOL.md.
