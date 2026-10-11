@@ -127,7 +127,7 @@ jobs:
           # Add other build tools your apps use here.
           claude_args: >-
             --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git:*),Bash(npm:*),Bash(npx:*),Bash(python3 tools/watchdog.py:*)"
-            --max-turns 40
+            --max-turns 80
           prompt: |
             You are agent "claude" on the desk in the folder desks/${{ matrix.desk }}/ of this repo.
             Every desk file path in START-HERE.md and PROTOCOL.md is relative to that folder. Don't touch other desks.
