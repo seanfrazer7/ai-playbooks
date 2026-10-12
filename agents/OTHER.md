@@ -6,6 +6,10 @@ Read [`START-HERE.md`](../START-HERE.md) first.
 
 Check the three abilities in [`agents/README.md`](README.md): read the desk, write the desk, wake itself. Test all three during proof of life. If it can't wake itself, it can still be the partner, but only while a human sends it "run now". Say so in `BRIEF.md` and raise `silentAfterMin`.
 
+## A quick second opinion while you work
+
+Not every job needs a desk. For a live check, like "work out what has to be true for this goal in my sheet, and have GPT check it", use the [`ask-gpt` skill](../skills/ask-gpt/SKILL.md). Claude drafts, sends the draft to GPT through the Codex CLI in read-only mode (an answer in seconds), revises, and edits your file only after you agree.
+
 ## Claude Code and Codex on one Mac, no GitHub
 
 Use [local mode](../protocols/local-mode.md). macOS timers start each agent in turn on a shared folder. Tested once, Oct 2026: both woke on their own and finished a small task together.

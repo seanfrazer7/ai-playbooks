@@ -46,7 +46,7 @@ What keeps it from stalling:
 | [`templates/local-desk/`](templates/local-desk/) | The local-mode kit: three scripts for one Mac |
 | [`case-studies/`](case-studies/) | Real projects: the problem, the setup, a timeline, the results, what broke, what changed |
 | [`prompts/`](prompts/) | Copy-paste start messages |
-| [`skills/`](skills/) | Claude Code skills you can install: [`local-desk`](skills/local-desk/SKILL.md) (start and watch a local desk with `/local-desk <goal>`) and [`overnight-handoff`](skills/overnight-handoff/SKILL.md) (the GitHub version) |
+| [`skills/`](skills/) | Claude Code skills you can install: [`ask-gpt`](skills/ask-gpt/SKILL.md) (Claude drafts, GPT checks it live through Codex, Claude applies it after your OK), [`local-desk`](skills/local-desk/SKILL.md) (start and watch a local desk with `/local-desk <goal>`) and [`overnight-handoff`](skills/overnight-handoff/SKILL.md) (the GitHub version) |
 
 To install a skill, copy its folder (e.g. `skills/local-desk/`) into `~/.claude/skills/` to use it everywhere, or into a project's `.claude/skills/`.
 
