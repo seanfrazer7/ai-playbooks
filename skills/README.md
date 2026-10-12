@@ -8,6 +8,8 @@ Claude Code skills for getting Claude and GPT to work together. For Macs; person
 | [`local-desk`](local-desk/SKILL.md) | Hand off a bigger job. Claude and Codex take turns on timers **while you're away**, and you're told when it's done | A one-time setup on each Mac (the skill walks you through it) |
 | [`overnight-handoff`](overnight-handoff/SKILL.md) | The GitHub version, with ChatGPT in Agent mode | See [START-HERE](../START-HERE.md) |
 
+**No Terminal, or no admin rights?** [Scheduled-tasks mode](../protocols/scheduled-tasks-mode.md) needs no skills or installs: just the Claude and ChatGPT desktop apps. For Node without an admin password, see [local mode's no-admin install](../protocols/local-mode.md#1-what-you-need).
+
 ## Install
 
 In Terminal:
@@ -21,7 +23,7 @@ To update later: `git -C ~/Downloads/ai-playbooks pull`, then run the `cp` part 
 ## What you need
 
 1. **Claude Code**, installed and logged in.
-2. **Codex** (OpenAI's coding agent, which runs GPT), installed and signed in. Install it with `npm install -g @openai/codex` if needed, then run `codex` once in Terminal and choose "Sign in with ChatGPT". You sign in yourself; the skills never handle your logins.
+2. **Codex** (OpenAI's coding agent, which runs GPT), installed and signed in. Install it with `npm install -g @openai/codex` if needed (no admin password? see the [no-admin Node install](../protocols/local-mode.md#1-what-you-need)), then run `codex` once in Terminal and choose "Sign in with ChatGPT". You sign in yourself; the skills never handle your logins.
 3. **For Google Sheets or Docs:** the Google connector turned on for Claude in your Claude settings.
 
 ## Use

@@ -23,7 +23,7 @@ You help the human run a desk from the [local mode guide](https://github.com/sea
 
 ## 2. First-time check (every run; it's quick)
 Check, in order, and fix only what's missing:
-1. **Tools:** `python3`, `git`, `claude`, `codex` exist, and `which claude codex` points into `~/.local/bin`, `/opt/homebrew/bin` or `/usr/local/bin` (the timers only look there). If a tool is elsewhere, tell the human; the fix is the `PATH=` line in `~/DeskKit/run-agent.sh`.
+1. **Tools:** `python3`, `git`, `claude`, `codex` exist, and `which claude codex` points into `~/.local/bin`, `/opt/homebrew/bin` or `/usr/local/bin` (the timers only look there). If a tool is elsewhere, tell the human; the fix is the `PATH=` line in `~/DeskKit/run-agent.sh`. If tools are missing and the human has no admin password, point them to the no-admin Node install in section 1 of the local mode guide.
 2. **Kit:** if `~/DeskKit/setup.sh` is missing, get it: `git clone --depth 1 https://github.com/seanfrazer7/ai-playbooks ~/Downloads/ai-playbooks` (or `git -C ~/Downloads/ai-playbooks pull` if that folder exists), and use `~/Downloads/ai-playbooks/templates/local-desk/setup.sh` in section 3. It copies itself to `~/DeskKit`.
 3. **Codex sign-in:** `codex login status`. If it isn't signed in, ask the human to run `codex` in the Terminal app, choose "Sign in with ChatGPT", then quit it. Wait until they say done, then check again.
 4. **Claude token:** `security find-generic-password -s claude-desk-token >/dev/null 2>&1 && echo yes`. If it's missing, the timers can't log Claude in, so ask the human to run, in the Terminal app:

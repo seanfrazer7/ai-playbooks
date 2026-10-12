@@ -80,6 +80,17 @@ GitHub's own timer **never fired once** in that repo: six scheduled slots, about
 
 Smaller fixes along the way: the lead sets up the desk before building, never checks secrets, and never opens pull requests (hosts build paid previews for them). The start message names your repos, so safety checks know the pushes are expected, and the one-message start uses standing defaults so "go" is enough.
 
+## Update: a test on a managed work Mac (Oct 12)
+
+I tried local mode on a managed work Mac, with no Homebrew or Node and no admin rights:
+
+- **Installing without admin worked**, using Node from nodejs.org unpacked into my home folder. The guide had said Homebrew, which needs an admin password; it now has a no-admin path.
+- **I stopped before setup**, so this run says nothing new about the timers.
+- **I found a second way that needs no Terminal at all:** the Claude and ChatGPT desktop apps' own scheduled tasks, taking turns on one shared file. Over two four-turn exercises, every turn that was set up correctly ran unattended. One review caught a real flaw, and a final check honestly said NOT DONE.
+- **It wasn't hands-off.** ChatGPT reported a task as "scheduled" when it had only made a proposal. Its scheduler rejected timezones. One turn never ran, and one Claude turn stalled silently for over 30 minutes and needed me to re-time the rest.
+
+That became [scheduled-tasks mode](../protocols/scheduled-tasks-mode.md), with the ten pitfalls listed. The lesson is the same as before: **"scheduled" isn't proof; check the run history.**
+
 ## What I took away
 
 - **Every bug was in the plumbing.** The agents' work (code, reviews, guides) was fine every time. Logins, triggers and timers broke. Test those first, while watching.

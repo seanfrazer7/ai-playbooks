@@ -2,7 +2,9 @@
 
 Two AI agents take turns on a shared folder (the **desk**) on your Mac. Each one wakes on its own timer, reads what the other wrote, does a bit of work, and leaves a note. Nothing goes through GitHub. The kit is in [`templates/local-desk/`](../templates/local-desk/): three scripts and two text files.
 
-> **Tested once (Oct 2026)** on macOS 27 with Claude Code 2.1.270 and Codex CLI 0.154: the proof of life passed (**HANDS-OFF**), and the agents finished a small task together with nobody at the Mac. Claude drafted a one-page guide, and Codex reviewed it, improved it and marked it done. The test found three bugs, all fixed in this kit ([case study](../case-studies/two-agent-desk-tests.md)). Anything not yet tested is marked **[verify]**.
+> **Tested once (Oct 2026)** on macOS 27 with Claude Code 2.1.270 and Codex CLI 0.154: the proof of life passed (**HANDS-OFF**), and the agents finished a small task together with nobody at the Mac. Claude drafted a one-page guide, and Codex reviewed it, improved it and marked it done. The test found three bugs, all fixed in this kit ([case study](../case-studies/two-agent-desk-tests.md)). A second test on a managed work Mac (macOS 27.0.1, Claude Code 2.1.296, Codex CLI 0.162.1) confirmed the no-admin install and that the kit's main flags still exist, but stopped before setup, so the newer versions haven't passed a proof of life yet. Anything not yet tested is marked **[verify]**.
+>
+> **Can't or don't want to use Terminal?** [Scheduled-tasks mode](scheduled-tasks-mode.md) uses the Claude and ChatGPT desktop apps' own scheduled tasks and one shared folder, with no installs. It was tested on a work Mac.
 >
 > **Experimental, personal use.** Same limits as the GitHub version: see [Suitable use and data](two-agent-desk.md#suitable-use-and-data).
 
@@ -22,23 +24,36 @@ The rest of this guide is what the skill does for you, step by step.
 ## 1. What you need
 
 - A Mac. It must stay **awake and plugged in** while the agents work.
-- **Claude Code** (a paid Claude plan) and **Codex**, OpenAI's coding agent (a ChatGPT plan), both as command-line tools. The tested setup installed both with npm, using Node from Homebrew (`brew install node`):
+- **Claude Code** (a paid Claude plan) and **Codex**, OpenAI's coding agent (a ChatGPT plan), both as command-line tools, installed with npm (Node's package manager). Pick one way to get Node:
+  - **No administrator password (works on managed work Macs).** Download the macOS tarball (`.tar.gz`, arm64 for Apple Silicon) from [nodejs.org](https://nodejs.org/en/download) and check its checksum. Then, in Terminal (replace the file name with yours):
+    ```bash
+    mkdir -p ~/.local/node ~/.local/bin && tar -xzf ~/Downloads/node-v*-darwin-arm64.tar.gz -C ~/.local/node --strip-components 1
+    ln -sf ~/.local/node/bin/node ~/.local/node/bin/npm ~/.local/node/bin/npx ~/.local/bin/
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zprofile && export PATH="$HOME/.local/bin:$PATH"
+    npm config set prefix ~/.local
+    ```
+  - **Homebrew** (`brew install node`). Homebrew's own installer needs an administrator password, which section 2 says not to grant on a work Mac.
+
+  Then install both tools:
   ```bash
   npm install -g @anthropic-ai/claude-code @openai/codex
   ```
-  The timers look for the tools in `~/.local/bin`, `/opt/homebrew/bin` and `/usr/local/bin`. If `which claude` or `which codex` shows a different folder (for example, Node installed with nvm), add that folder to the `PATH=` line near the top of `run-agent.sh`.
+  A warning like `npm warn install-scripts 1 package has install scripts not yet covered by allowScripts` is normal: check that `claude --version` works.
+
+  The timers look for the tools in `~/.local/bin`, `/opt/homebrew/bin` and `/usr/local/bin`. If `which claude` or `which codex` shows a different folder (for example, Node installed with nvm), add that folder to the `PATH=` line near the top of `run-agent.sh`. If a new Terminal window says `command not found`, add the `export PATH=...` line above to `~/.zprofile`.
 - Built-in tools: `sh`, Python 3, `git`, `launchd` (macOS timers). No other services, no extra cost.
 
-**The ChatGPT app can't take part on its own.** It can't run on a timer from your Mac. If you only have the ChatGPT app, you'd open it yourself and ask it to read the desk, which isn't hands-off. Codex is what makes this work.
+**This kit uses Codex, not the ChatGPT app.** The ChatGPT desktop app has its own scheduled tasks, and in a test it ran them unattended and wrote to a local folder. But they can't be driven by this kit's timers or lock. To use the apps instead of Terminal, see [scheduled-tasks mode](scheduled-tasks-mode.md).
 
 ## 2. Work-computer safety (read before installing)
 
 - **Ask first.** Check your employer's AI and data policies, and whether background jobs and these tools are allowed. Both agents send what they read to OpenAI or Anthropic. "It's local" doesn't make it allowed.
 - **Keep out of the desk:** company source code, customer or employee data, passwords, API keys, anything under NDA.
 - **Grant nothing extra.** Never grant Full Disk Access, Accessibility, Screen Recording or administrator rights. The kit needs none of them.
-- **Where the desk lives:** `~/Desks/`. Not iCloud, Dropbox or OneDrive (they sync half-written files), and not Documents or Desktop (macOS keeps asking background jobs for permission there).
+- **Where the desk lives:** `~/Desks/`. Not iCloud, Dropbox or OneDrive (they sync half-written files). Avoid Documents and Desktop: macOS *can* ask background jobs for permission there (it didn't in one test, but `~/Desks/` avoids the question).
 - **One work folder at most.** A goal may name one project folder outside the desk (section 5). Use only a folder you're allowed to give AI tools. Never point a personal desk at a work project, or the reverse.
-- **Managed Macs** may block timers, forbid the tools or force sleep. If setup fails for one of these reasons, stop.
+- **Is it a managed Mac?** Run `profiles status -type enrollment`. If it says it's enrolled (MDM), that's not a blocker by itself, but ask IT before installing: the kit adds standing changes they may notice (four timers and a keep-awake job). Managed Macs may also block timers, forbid the tools or force sleep. If setup fails for one of these reasons, stop.
+- **The Claude token is a standing credential.** To remove it from this Mac: `security delete-generic-password -s claude-desk-token`. To cancel it everywhere, revoke it in your Claude account settings **[verify]** where.
 
 ## 3. Set up (about 20 minutes)
 
@@ -46,6 +61,7 @@ The rest of this guide is what the skill does for you, step by step.
    ```bash
    git clone --depth 1 https://github.com/seanfrazer7/ai-playbooks ~/Downloads/ai-playbooks
    ```
+   (If an AI assistant's web tool won't show this guide word for word, point it at the raw file instead: `https://raw.githubusercontent.com/seanfrazer7/ai-playbooks/main/protocols/local-mode.md`.)
 2. **Check the tools and log in.** Run `python3 --version`, `git --version`, `claude --version` and `codex --version`. If macOS offers to install developer tools, accept (it's Apple's). Run `codex` once and sign in.
 3. **Give Claude a login that won't expire.** A login made by typing `claude` can expire when it isn't used, and then the timer can't start Claude. This happened in our test. So save a long-lived token in your Keychain:
    ```bash
@@ -56,13 +72,12 @@ The rest of this guide is what the skill does for you, step by step.
    security add-generic-password -a "$USER" -s claude-desk-token -w
    ```
    Press ⌘K to clear the screen. The kit reads the token from the Keychain on each run. Don't paste it anywhere else.
-4. **Install your first desk:**
+4. **Install your first desk, with its goal, in one command:**
    ```bash
-   cd ~/Downloads/ai-playbooks/templates/local-desk && sh setup.sh
+   cd ~/Downloads/ai-playbooks/templates/local-desk && sh setup.sh --name cheatsheet --goal "Write work/CHEATSHEET.md: a one-page, plain-English guide to starting and stopping a desk. Claude drafts it, Codex reviews it."
    ```
-   It asks for a name, lists everything it will create, and waits for you to type `yes`. It creates `~/Desks/<name>/`, copies the kit to `~/DeskKit/` (shared by all your desks), and starts four timers.
-5. **Write the goal.** Open `~/Desks/<name>/BRIEF.md` and replace the placeholder line. In `STATE.json`, change the `title` of the one item. (For later desks you can skip this; see section 5.)
-6. **Run the proof of life** (section 6) before you walk away.
+   It lists everything it will create and waits for you to type `yes` (add `--yes` to skip that). It creates `~/Desks/<name>/` with the goal and first item filled in, copies the kit to `~/DeskKit/` (shared by all your desks), and starts four timers. Without `--name` and `--goal`, it asks for a name and you write the goal into `BRIEF.md` and the item's `title` in `STATE.json` yourself.
+5. **Run the proof of life** (section 6) before you walk away.
 
 **To stop one desk:** set `"halt": true` in its `STATE.json` (you can undo this), or add `### Human → all · HALT` to `MESSAGES.md` (permanent). **To remove it:** `sh ~/DeskKit/setup.sh --uninstall <name>`. That turns off its timers; delete `~/Desks/<name>` yourself.
 

@@ -18,6 +18,8 @@
 6. **Your chat history isn't your memory.** Read your `status/chatgpt.json` → `next` at the start of every run (rule S10).
 7. **Stay in your desk folder** (`desks/<project>/`). **Only edit** `status/chatgpt.json`, `MESSAGES.md`, `work/`, and the items in `STATE.json` that have `next` = you.
 
+**On a Mac, without GitHub:** the ChatGPT desktop app's scheduled tasks (local mode) can read and write a local folder unattended. See [scheduled-tasks mode](../protocols/scheduled-tasks-mode.md) and its pitfalls: confirm each task is **Active** on the Scheduled page, and give no timezone in the schedule rule.
+
 ## Roles
 
 - **Artist:** see [the art preset](../protocols/overnight-claude-chatgpt.md#part-2-art-mode).

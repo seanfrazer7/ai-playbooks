@@ -40,7 +40,7 @@ What keeps it from stalling:
 | Path | What's inside |
 |---|---|
 | [`START-HERE.md`](START-HERE.md) | The entry point for humans and agents |
-| [`protocols/`](protocols/) | The [two-agent desk protocol](protocols/two-agent-desk.md), [local mode](protocols/local-mode.md) (Claude Code and Codex on one Mac, no GitHub), and [Claude ⇄ ChatGPT presets](protocols/overnight-claude-chatgpt.md) for art and design debates |
+| [`protocols/`](protocols/) | The [two-agent desk protocol](protocols/two-agent-desk.md), [local mode](protocols/local-mode.md) (Claude Code and Codex on one Mac, no GitHub), [scheduled-tasks mode](protocols/scheduled-tasks-mode.md) (the Claude and ChatGPT apps, no Terminal), and [Claude ⇄ ChatGPT presets](protocols/overnight-claude-chatgpt.md) for art and design debates |
 | [`agents/`](agents/README.md) | Platform notes: what each AI can do, how it wakes up, how to read its usage |
 | [`templates/ai-desks/`](templates/ai-desks/README.md) | The one shared repo you set up once, including the [watchdog](templates/ai-desks/tools/watchdog.py) |
 | [`templates/local-desk/`](templates/local-desk/) | The local-mode kit: three scripts for one Mac |
