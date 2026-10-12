@@ -35,6 +35,8 @@ Join the desk desks/<project>/ in the repo <owner>/ai-desks as agent "<id>".
 
 **3. Wait for the proof-of-life check to pass (about 15 minutes).** The first agent tells you when both agents have woken up **on their own schedule** and the watchdog has run once. Don't walk away before that. The only real overnight failure so far was a wake-up that nobody had tested ([case study](case-studies/dragon-coins-overnight-build.md)).
 
+**No GitHub?** [Local mode](protocols/local-mode.md) runs Claude Code and Codex on one Mac through a shared folder.
+
 **To stop everything:** put `"halt": true` in the desk's `STATE.json`, or add a message headed `### Human → all · HALT`. Both agents stop on their next run.
 
 ---

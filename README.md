@@ -10,6 +10,7 @@ I'm Sean Frazer. I build products by directing AI agents. I set the goals and th
 
 - **A feature built overnight by two AIs.** Claude Code wrote a coin economy, a market and holo trading cards. ChatGPT painted 20 matching card illustrations. They talked to each other only through Markdown files in a GitHub repo. → [Case study](case-studies/dragon-coins-overnight-build.md)
 - **A real app my kids use every school day.** Course Quest turns an overdue-homework backlog into one small daily quest, with AI course import, streaks, a dragon to raise, and parent-controlled rewards. → [Case study](case-studies/course-quest.md)
+- **Two AIs, tested until they actually ran.** Eleven bugs found by watching every wake-up, on GitHub and on one Mac with Claude Code and Codex. → [Case study](case-studies/two-agent-desk-tests.md)
 - **Post-mortems from both AIs, compared.** Each one found the half of the failure the other missed. → [Read the comparison](case-studies/dragon-coins-overnight-build.md#two-post-mortems-compared)
 
 ![Card Binder from Course Quest](case-studies/assets/card-binder.jpg)
@@ -39,9 +40,10 @@ What keeps it from stalling:
 | Path | What's inside |
 |---|---|
 | [`START-HERE.md`](START-HERE.md) | The entry point for humans and agents |
-| [`protocols/`](protocols/) | The [two-agent desk protocol](protocols/two-agent-desk.md), plus [Claude ⇄ ChatGPT presets](protocols/overnight-claude-chatgpt.md) for art and design debates |
+| [`protocols/`](protocols/) | The [two-agent desk protocol](protocols/two-agent-desk.md), [local mode](protocols/local-mode.md) (Claude Code and Codex on one Mac, no GitHub), and [Claude ⇄ ChatGPT presets](protocols/overnight-claude-chatgpt.md) for art and design debates |
 | [`agents/`](agents/README.md) | Platform notes: what each AI can do, how it wakes up, how to read its usage |
 | [`templates/ai-desks/`](templates/ai-desks/README.md) | The one shared repo you set up once, including the [watchdog](templates/ai-desks/tools/watchdog.py) |
+| [`templates/local-desk/`](templates/local-desk/) | The local-mode kit: three scripts for one Mac |
 | [`case-studies/`](case-studies/) | Real projects: the problem, the setup, a timeline, the results, what broke, what changed |
 | [`prompts/`](prompts/) | Copy-paste start messages |
 | [`skills/`](skills/) | Claude Code skills you can install, e.g. [`overnight-handoff`](skills/overnight-handoff/SKILL.md) |
