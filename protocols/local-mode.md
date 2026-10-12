@@ -6,6 +6,19 @@ Two AI agents take turns on a shared folder (the **desk**) on your Mac. Each one
 >
 > **Experimental, personal use.** Same limits as the GitHub version: see [Suitable use and data](two-agent-desk.md#suitable-use-and-data).
 
+## Easiest: let Claude Code do it
+
+Install the [`local-desk` skill](../skills/local-desk/SKILL.md) once:
+
+```bash
+git clone --depth 1 https://github.com/seanfrazer7/ai-playbooks ~/Downloads/ai-playbooks
+mkdir -p ~/.claude/skills && cp -R ~/Downloads/ai-playbooks/skills/local-desk ~/.claude/skills/
+```
+
+Then, in Claude Code, type `/local-desk <your goal>`. The first time, it walks you through the setup below (you do the two sign-ins yourself) and the proof of life. After that, each new goal is one message: it creates the desk, the timers do the rest, and it tells you when the agents finish or get stuck, for as long as that chat stays open. `/local-desk status` lists your desks, and `/local-desk stop <name>` turns one off. **[verify]** The skill is new; its steps are the ones tested below.
+
+The rest of this guide is what the skill does for you, step by step.
+
 ## 1. What you need
 
 - A Mac. It must stay **awake and plugged in** while the agents work.

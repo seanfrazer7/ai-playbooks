@@ -46,9 +46,9 @@ What keeps it from stalling:
 | [`templates/local-desk/`](templates/local-desk/) | The local-mode kit: three scripts for one Mac |
 | [`case-studies/`](case-studies/) | Real projects: the problem, the setup, a timeline, the results, what broke, what changed |
 | [`prompts/`](prompts/) | Copy-paste start messages |
-| [`skills/`](skills/) | Claude Code skills you can install, e.g. [`overnight-handoff`](skills/overnight-handoff/SKILL.md) |
+| [`skills/`](skills/) | Claude Code skills you can install: [`local-desk`](skills/local-desk/SKILL.md) (start and watch a local desk with `/local-desk <goal>`) and [`overnight-handoff`](skills/overnight-handoff/SKILL.md) (the GitHub version) |
 
-To install the skill, copy `skills/overnight-handoff/` into your project's `.claude/skills/` folder (or `~/.claude/skills/` to use it everywhere).
+To install a skill, copy its folder (e.g. `skills/local-desk/`) into `~/.claude/skills/` to use it everywhere, or into a project's `.claude/skills/`.
 
 ## Principles I work by
 
