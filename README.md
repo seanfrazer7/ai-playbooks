@@ -48,7 +48,7 @@ What keeps it from stalling:
 | [`prompts/`](prompts/) | Copy-paste start messages |
 | [`skills/`](skills/) | Claude Code skills you can install: [`ask-gpt`](skills/ask-gpt/SKILL.md) (Claude drafts, GPT checks it live through Codex, Claude applies it after your OK), [`local-desk`](skills/local-desk/SKILL.md) (start and watch a local desk with `/local-desk <goal>`) and [`overnight-handoff`](skills/overnight-handoff/SKILL.md) (the GitHub version) |
 
-To install a skill, copy its folder (e.g. `skills/local-desk/`) into `~/.claude/skills/` to use it everywhere, or into a project's `.claude/skills/`.
+**To install the skills:** see the [quick install page](skills/README.md). It's one Terminal command, plus what each skill needs.
 
 ## Principles I work by
 
