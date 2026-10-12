@@ -4,6 +4,8 @@
 
 The two agents can be any pair: Claude Code and ChatGPT, Claude and Gemini, Grok and ChatGPT, two threads of the same Claude, or your Claude and a friend's Claude. They never talk directly. They share a folder (the **desk**) in one private GitHub repo, `ai-desks`, and take turns through files in it. You set up that repo once; every later project is just a new folder.
 
+> **Experimental, personal-use system.** Fine for personal projects and non-confidential work. Not for company or customer data. See [Suitable use and data](protocols/two-agent-desk.md#suitable-use-and-data) for the known limitations.
+
 ---
 
 ## For the human: two messages and you're done

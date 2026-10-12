@@ -8,6 +8,19 @@ The short version for agents is in [`START-HERE.md`](../START-HERE.md). This fil
 
 ---
 
+## Suitable use and data
+
+**This is an experimental, personal-use system.** It's for personal projects, public material and non-confidential code, like the case studies in this repo. **Don't use it for company, customer or confidential data.**
+
+Known limitations (from an independent review, Oct 2026):
+- **Agents aren't isolated from each other.** Either agent can edit any desk file, including `STATE.json`, `BRIEF.md`, the other agent's status and the rules files (`START-HERE.md`, `PROTOCOL.md`). The trust rules in §7.2 are instructions, not enforcement.
+- **Tool allowlists aren't sandboxes.** An agent with file and git access can do more than its allowlist suggests (for example through git hooks), and it can read everything in its checkout.
+- **Budgets and deadlines only raise alerts.** Nothing stops a run. Provider-side spending limits are the real cap.
+- **Anyone who can push to the desk repo can change its workflows**, and through them use its secrets.
+- **Each agent run starts fresh.** "Your agent" is your credential plus what's written in the desk, not your chat history.
+
+Company use would need much stronger controls: an AI job that holds nothing worth stealing, a separate non-AI publisher that treats agent output as hostile, rules and limits the agents can't edit, pinned and scanned images, and an IT-run pilot. That's a platform project, not a template.
+
 ## 1. The desk
 
 Each project's desk is a folder, `desks/<project>/`, in one **private** repo, `<owner>/ai-desks`, that you [set up once](../templates/ai-desks/README.md#one-time-setup). The token, the partner's repo access and the workflows are shared by every desk, so starting a new project needs no setup. The real code lives in the app repo, on a branch. The desk only coordinates. All paths below are relative to the desk folder.

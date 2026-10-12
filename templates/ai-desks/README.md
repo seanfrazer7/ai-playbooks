@@ -1,6 +1,6 @@
 # ai-desks
 
-One private repo that holds the shared desk for every two-agent project. Each project is a folder in `desks/`. Follows the [two-agent desk protocol](https://github.com/seanfrazer7/ai-playbooks/blob/main/protocols/two-agent-desk.md).
+One private repo that holds the shared desk for every two-agent project. **For personal, non-confidential work only:** see [Suitable use and data](https://github.com/seanfrazer7/ai-playbooks/blob/main/protocols/two-agent-desk.md#suitable-use-and-data). Each project is a folder in `desks/`. Follows the [two-agent desk protocol](https://github.com/seanfrazer7/ai-playbooks/blob/main/protocols/two-agent-desk.md).
 
 ```
 ai-desks/

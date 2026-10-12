@@ -25,6 +25,8 @@ Partner: <ChatGPT | Gemini | Grok | another Claude thread | <name>'s Claude>
 Deadline: <e.g. 8am tomorrow>
 ```
 
+**Experimental, for personal projects:** not for company or confidential data ([why](protocols/two-agent-desk.md#suitable-use-and-data)).
+
 What keeps it from stalling:
 - **Every task has one owner.** Whoever must act next is written down, so "who's stuck" always has an answer.
 - **Hard caps.** Three attempts, then park it. Three debate rounds, then the lead decides. Questions never block.
